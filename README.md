@@ -1,6 +1,6 @@
 ﻿# Stock_Analysis
 
-Code will use various statistical packages and tkinter to analyze a dataset of stocks in the financial sector) from the TSX.
+Code will use various statistical packages and tkinter to analyze a dataset of stocks in the financial sector from the TSX.
 
 This project will display
     
