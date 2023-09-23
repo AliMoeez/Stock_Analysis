@@ -32,6 +32,11 @@ class MaxMin:
         self.rbc_min_open=min(df_rbc["Close"]) ; self.scotia_min_open=min(df_scotia["Close"]) ; self.cibc_min_open=min(df_cibc["Close"]) 
         self.naboc_min_open=min(df_naboc["Close"]) ; self.td_min_open=min(df_td["Close"])
 
+    def plotly_return(self):
+        self.max_open_dict={"RBC":self.rbc_max_open, "SCOTIABANK":self.scotia_max_open,"CIBC":self.cibc_max_open,
+                            "National Bank": self.naboc_max_open, "TD": self.td_max_open}
+        return self.max_open_dict
+
     def graphs(self):
         #vislizations using matplotlib
         self.max_open_dict={"RBC":self.rbc_max_open, "SCOTIABANK":self.scotia_max_open,"CIBC":self.cibc_max_open,
@@ -54,7 +59,7 @@ class MaxMin:
      #   
       #  self.rbc_max_open.plot(ax=self.ax[0])
     
-        plt.show()
+#        plt.show()
 
 
 maxmin=MaxMin()
