@@ -32,10 +32,8 @@ class BestTimeInv:
 
     def lowest_price_period(self):
         for col in self.df_total:
-            print(col)
-        print(self.df_total.nsmallest(10,"RBC_Open"))
-
-    
+             if col !="Date":
+                print(self.df_total.nsmallest(5,col))
 
 bestinvtime=BestTimeInv()
 bestinvtime.dataframe_cosolidation()

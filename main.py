@@ -27,15 +27,7 @@ app.layout=html.Div([
         }
     })
 
-     
-
-
-  #  dash_table.DataTable(data=df_rbc.to_dict("records"),page_size=5,
-  #                       style_header={ 'backgroundColor':'rgb(28,28,28)', 'color':'white'},
-  #                       style_data={'backgroundColor':'rgb(72,72,72)','color':'white'})
 ])
-
-
 
 if __name__=='__main__':
     app.run(debug=True)
