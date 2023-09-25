@@ -2,11 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 #lode csv files using pyarrow engine to make the csv files load faster
-df_rbc=pd.read_csv(r"Data\Data_Sets\RBC_TO.csv", engine="pyarrow")
-df_scotia=pd.read_csv(r"Data\Data_Sets\BNS.TO.csv",engine="pyarrow")
-df_cibc=pd.read_csv(r"Data\Data_Sets\CIBC.TO.csv",engine="pyarrow")
-df_naboc=pd.read_csv(r"Data\Data_Sets\NABOC.TO.csv",engine="pyarrow")
-df_td=pd.read_csv(r"Data\Data_Sets\TD.TO.csv",engine="pyarrow")
+df_rbc=pd.read_csv(r"Data\Stock Prices\RBC_TO.csv", engine="pyarrow")
+df_scotia=pd.read_csv(r"Data\Stock Prices\BNS.TO.csv",engine="pyarrow")
+df_cibc=pd.read_csv(r"Data\Stock Prices\CIBC.TO.csv",engine="pyarrow")
+df_naboc=pd.read_csv(r"Data\Stock Prices\NABOC.TO.csv",engine="pyarrow")
+df_td=pd.read_csv(r"Data\Stock Prices\TD.TO.csv",engine="pyarrow")
 
 class MaxMin:
     def __init__(self):

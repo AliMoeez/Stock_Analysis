@@ -1,6 +1,6 @@
 #Stock return is defined as ((P1-P0)+Div)/P0 where P1=End Price, P0=Start Price, Div=Divedends
 #This program will compute the daily stock return + divideends (on applicable dates) and produce
-#A daily return for stock which will be plotted. A total yearly stock return will be computed  and graphed as well
+#A daily return for stock which will be plotted. A total yearly stock return will be computed and graphed as well
 
 import pandas as pd
 import numpy as np 
@@ -29,15 +29,39 @@ class StockReturn:
 
     def daily_stock_return(self):
         #computing daily stock returns including the divdends for each company
+        #replace al NaN values with 0 to make computation of daily stock returns easier
+        self.df_bmo_total["Dividends"]=self.df_bmo_total["Dividends"].replace(np.nan,0) ; self.df_scotia_total["Dividends"]=self.df_scotia_total["Dividends"].replace(np.nan,0)
+        self.df_naboc_total["Dividends"]=self.df_naboc_total["Dividends"].replace(np.nan,0) ; self.df_rbc_total["Dividends"]=self.df_rbc_total["Dividends"].replace(np.nan,0)
+        self.df_cibc_total["Dividends"]=self.df_cibc_total["Dividends"].replace(np.nan,0) ; self.df_td_total["Dividends"]=self.df_td_total["Dividends"].replace(np.nan,0)
+        #Use the stock return formula on each df by creating a new colum which stores the computations of the daily return
+        self.df_bmo_total["Daily Returns"]=((self.df_bmo_total["Close"]-self.df_bmo_total["Open"]+self.df_bmo_total["Dividends"])/self.df_bmo_total["Open"])*100  ; self.df_scotia_total["Daily Returns"]=((self.df_scotia_total["Close"]-self.df_scotia_total["Open"]+self.df_scotia_total["Dividends"])/self.df_scotia_total["Open"])*100
+        self.df_naboc_total["Daily Returns"]=((self.df_naboc_total["Close"]-self.df_naboc_total["Open"]+self.df_naboc_total["Dividends"])/self.df_naboc_total["Open"])*100 ; self.df_rbc_total["Daily Returns"]=((self.df_rbc_total["Close"]-self.df_rbc_total["Open"]+self.df_rbc_total["Dividends"])/self.df_rbc_total["Open"])*100
+        self.df_cibc_total["Daily Returns"]=((self.df_cibc_total["Close"]-self.df_cibc_total["Open"]+self.df_cibc_total["Dividends"])/self.df_cibc_total["Open"])*100 ; self.df_td_total["Daily Returns"]=((self.df_td_total["Close"]-self.df_td_total["Open"]+self.df_td_total["Dividends"])/self.df_td_total["Open"])*100
 
-        self.df_bmo_total["Dividends"]=self.df_bmo_total["Dividends"].replace(np.nan,0)
+    def yearly_stock_return(self):
+        #compuitng the yearly stock return including dividends for each company
+        #formula will take the closing price less the open price plus dividends divided by the open price times 100 to get the return
+        self.bmo_total_dividend=sum(self.df_bmo_total["Dividends"]) ; self.bmo_open_price=self.df_bmo_total["Open"].iloc[0] ; self.bmo_close_price=self.df_bmo_total["Close"].iloc[-1]
+        self.bmo_yearly_stock_return=round(((self.bmo_close_price-self.bmo_open_price+self.bmo_total_dividend)/self.bmo_open_price)*100,4)
+        
+        self.scotia_total_dividend=sum(self.df_scotia_total["Dividends"]) ; self.scotia_open_price=self.df_scotia_total["Open"].iloc[0] ; self.scotia_close_price=self.df_scotia_total["Close"].iloc[-1]
+        self.scotia_yearly_stock_return=round(((self.scotia_close_price-self.scotia_open_price+self.scotia_total_dividend)/self.scotia_open_price)*100,4)
+        
+        self.naboc_total_dividend=sum(self.df_naboc_total["Dividends"]) ; self.naboc_open_price=self.df_naboc_total["Open"].iloc[0] ; self.naboc_close_price=self.df_naboc_total["Close"].iloc[-1]
+        self.naboc_yearly_stock_return=round(((self.naboc_close_price-self.naboc_open_price+self.naboc_total_dividend)/self.naboc_open_price)*100,4)
+        
+        self.rbc_total_dividend=sum(self.df_rbc_total["Dividends"]) ; self.rbc_open_price=self.df_rbc_total["Open"].iloc[0] ; self.rbc_close_price=self.df_rbc_total["Close"].iloc[-1]
+        self.rbc_yearly_stock_return=round(((self.rbc_close_price-self.rbc_open_price+self.rbc_total_dividend)/self.rbc_open_price)*100,4)
+        
+        self.cibc_total_dividend=sum(self.df_cibc_total["Dividends"]) ; self.cibc_open_price=self.df_cibc_total["Open"].iloc[0] ; self.cibc_close_price=self.df_cibc_total["Close"].iloc[-1]
+        self.cibc_yearly_stock_return=round(((self.cibc_close_price-self.cibc_open_price+self.cibc_total_dividend)/self.cibc_open_price)*100,4)
+        
+        self.td_total_dividend=sum(self.df_td_total["Dividends"]) ; self.td_open_price=self.df_td_total["Open"].iloc[0] ; self.td_close_price=self.df_td_total["Close"].iloc[-1]
+        self.td_yearly_stock_return=round(((self.td_close_price-self.td_open_price+self.td_total_dividend)/self.td_open_price)*100,4)
 
-        for i in self.df_bmo_total["Open"]:
-            for j in self.df_bmo_total["Close"]:
-                    print(i-j)
-    
 stockreturn=StockReturn()
 stockreturn.data_consolidation()
 stockreturn.daily_stock_return()
+stockreturn.yearly_stock_return()
 
 

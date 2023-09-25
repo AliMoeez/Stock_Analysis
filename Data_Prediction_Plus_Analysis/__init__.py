@@ -1,1 +1,1 @@
-from .Other.Max_Min_Price import MaxMin
+from .Max_Min_Price import MaxMin
