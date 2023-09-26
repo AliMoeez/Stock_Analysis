@@ -21,11 +21,11 @@ class StockReturn:
         #Combine each stock with its divdend by create a dataframe that includes the stock prices and divdends for each company
         #Use a left join on Date to join all values from the stock df and corresponding values from the divdends table
         self.df_bmo_total=pd.merge(self.df_bmo,self.df_bmo_div,on="Date",how="left")
-        self.df_scotia_total=pd.merge(self.df_bmo,self.df_scotia_div,on="Date",how="left")
-        self.df_naboc_total=pd.merge(self.df_bmo,self.df_naboc_div,on="Date",how="left")
-        self.df_rbc_total=pd.merge(self.df_bmo,self.df_rbc_div,on="Date",how="left")
-        self.df_cibc_total=pd.merge(self.df_bmo,self.df_cibc_div,on="Date",how="left")
-        self.df_td_total=pd.merge(self.df_bmo,self.df_td_div,on="Date",how="left")
+        self.df_scotia_total=pd.merge(self.df_scotia,self.df_scotia_div,on="Date",how="left")
+        self.df_naboc_total=pd.merge(self.df_naboc,self.df_naboc_div,on="Date",how="left")
+        self.df_rbc_total=pd.merge(self.df_rbc,self.df_rbc_div,on="Date",how="left")
+        self.df_cibc_total=pd.merge(self.df_cibc,self.df_cibc_div,on="Date",how="left")
+        self.df_td_total=pd.merge(self.df_td,self.df_td_div,on="Date",how="left")
 
     def daily_stock_return(self):
         #computing daily stock returns including the divdends for each company

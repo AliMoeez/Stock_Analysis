@@ -23,7 +23,7 @@ app.layout=html.Div([
         ],
         'layout':{
             'title':"Max Open Prices",
-            
+             
         }
     })
 
