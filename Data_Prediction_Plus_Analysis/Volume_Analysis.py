@@ -35,17 +35,27 @@ class VolumeAnalysis(StockReturn):
     def correlation_with_stock_price(self):
         #find the correlation of each stock return with its change in its volume change to see if stock pricee changes 
         #correlate with changes in volume changes
-        self.df_bmo_volume_stock_change={"Daily Returns":self.df_bmo_total["Daily Returns"],"Volume Change":self.df_bmo_total["Volume Change"]}
+        self.df_bmo_volume_stock_change={"Daily Returns":self.df_bmo_total["Daily Returns"],"Volume Change":self.df_bmo_total["Volume Change"]} ; self.df_scotiabank_volume_stock_change={"Daily Returns":self.df_scotia_total["Daily Returns"],"Volume Change":self.df_scotia_total["Volume Change"]}
+        self.df_naboc_volume_stock_change={"Daily Returns":self.df_naboc_total["Daily Returns"],"Volume Change":self.df_naboc_total["Volume Change"]} ; self.df_rbc_volume_stock_change={"Daily Returns":self.df_rbc_total["Daily Returns"],"Volume Change":self.df_rbc_total["Volume Change"]}
+        self.df_cibc_volume_stock_change={"Daily Returns":self.df_cibc_total["Daily Returns"],"Volume Change":self.df_cibc_total["Volume Change"]} ; self.df_td_volume_stock_change={"Daily Returns":self.df_td_total["Daily Returns"],"Volume Change":self.df_td_total["Volume Change"]}
 
+        self.df_bmo_volume_stock_change=pd.DataFrame(self.df_bmo_volume_stock_change) ; self.df_scotiabank_volume_stock_change=pd.DataFrame(self.df_scotiabank_volume_stock_change)
+        self.df_naboc_volume_stock_change=pd.DataFrame(self.df_naboc_volume_stock_change) ; self.df_rbc_volume_stock_change=pd.DataFrame(self.df_rbc_volume_stock_change)
+        self.df_cibc_volume_stock_change=pd.DataFrame(self.df_cibc_volume_stock_change) ; self.df_td_volume_stock_change=pd.DataFrame(self.df_td_volume_stock_change)
 
+        self.df_bmo_volume_stock_change_correlation=self.df_bmo_volume_stock_change.corr() ; self.df_scotiabank_volume_stock_change_correlation=self.df_scotiabank_volume_stock_change.corr()
+        self.df_naboc_volume_stock_change_correlation=self.df_naboc_volume_stock_change.corr() ; self.df_rbc_volume_stock_change_correlation=self.df_rbc_volume_stock_change.corr()
+        self.df_cibc_volume_stock_change_correlation=self.df_cibc_volume_stock_change.corr() ; self.df_td_volume_stock_change_correlation=self.df_td_volume_stock_change.corr()
+        #found that their is little correlation between volume change and stock returns. In general it apppears that
+        #There is a very slight negative correlation between volume change and stock return. That is as volume change goes up
+        #the return goes down or vice versa. But again this correlation is small.
 
-
-        self.df_bmo_volume_stock_change=pd.DataFrame(self.df_bmo_volume_stock_change)
-
-
-        self.df_bmo_volume_stock_change_correlation=self.df_bmo_volume_stock_change.corr()
-
-
+        print(self.df_bmo_volume_stock_change_correlation)
+        print(self.df_scotiabank_volume_stock_change_correlation)
+        print(self.df_naboc_volume_stock_change_correlation)
+        print(self.df_rbc_volume_stock_change_correlation)
+        print(self.df_cibc_volume_stock_change_correlation)
+        print(self.df_td_volume_stock_change_correlation)
 
 
 volumeanalysis=VolumeAnalysis()
