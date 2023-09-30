@@ -2,12 +2,13 @@
 #be used in this analysis that accounts for seasonality.
 
 import pandas as pd
-from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 from statsmodels.graphics.tsaplots import plot_predict
 from statsmodels.graphics.tsaplots import plot_acf,plot_pacf
 from statsmodels.tsa.stattools import adfuller
 from sklearn.metrics import mean_squared_error,mean_absolute_error,mean_absolute_percentage_error
 import matplotlib.pyplot as plt
+from pmdarima import auto_arima
 
 from Stock_Return import StockReturn
 
@@ -35,6 +36,11 @@ class Prediction(StockReturn):
         fig,ax=plt.subplots(2,3)
         plot_acf(self.df_bmo_total[column],ax=ax[0,0]) ; plot_acf(self.df_scotia_total[column],ax=ax[0,1]) ; plot_acf(self.df_naboc_total[column],ax=ax[0,2])
         plot_acf(self.df_rbc_total[column],ax=ax[1,0]) ; plot_acf(self.df_td_total[column],ax=ax[1,1]) ; plot_acf(self.df_cibc_total[column],ax=ax[1,2])
+
+        fig,ax=plt.subplots(2,3)
+        plot_pacf(self.df_bmo_total[column],ax=ax[0,0]) ; plot_pacf(self.df_scotia_total[column],ax=ax[0,1]) ; plot_pacf(self.df_naboc_total[column],ax=ax[0,2])
+        plot_pacf(self.df_rbc_total[column],ax=ax[1,0]) ; plot_pacf(self.df_td_total[column],ax=ax[1,1]) ; plot_pacf(self.df_cibc_total[column],ax=ax[1,2])
+
         for idx,df in enumerate(self.df_list): self.adfuller_list.append( (self.df_list_name[idx],round(adfuller(df)[1],4)))
 
     def plot_acf_adfuller(self):
@@ -64,15 +70,40 @@ class Prediction(StockReturn):
     def new_plot_acf_adfuller(self):
         #Check to see if differncing improved the results of the ACF and the adfullter p-values
         Prediction.plot_acf_adfuller_function(self,"Differenced Open")
-        plt.show()
+      #  plt.show()
         #See that now the ACF drops off after the first lag indicating low autocorrrelation and all p-values are <0.05 or (0.0) indicating that
         #Autocorrelation has been removed by differcing. The same results will come from a PACF
-
     
+    def SARIMA_model(self):
+        #Looking at the original ACF and PACF we see that the ACF for all figures decays slowly in a exponential matter towards zero, and
+        #the PACF has a large spike at lag 1 and drops to around 0 for all of the companies. This means we use a ARIMA(p,d,0) model.
+        #We will do a SARIMA(0,1,0)(1,0,0)365 since differcing removed our trend and it was noted that a AR term will be used which
+        #is seansonal due to the slow decay of the ACF and quick decay of the PACF after lag 1.
+        self.df_bmo_sarimax=SARIMAX(self.df_bmo_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12))
+        self.df_bmo_sarimax=self.df_bmo_sarimax.fit()
 
+       # mean_squared_error,mean_absolute_error,mean_absolute_percentage_error
 
+        self.df_bmo_sarimax_forecast=self.df_bmo_sarimax.forecast(len(self.df_bmo_total["Open"]))
+
+        self.df_bmo_sarimax_mse=mean_squared_error(self.df_bmo_sarimax,self.df_bmo_sarimax_forecast)
+        self.df_bmo_sarimax_mae=mean_absolute_error(self.df_bmo_sarimax,self.df_bmo_sarimax_forecast)
+        self.df_bmo_sarimax_mape=mean_absolute_percentage_error(self.df_bmo_sarimax,self.df_bmo_sarimax_forecast)
+
+    def auto_SARIMA_model(self):
+        #Can use auto_arima to create a automatic arima model based on AIC characteristics
+        self.df_bmo_auto_sarimax=auto_arima(self.df_bmo_total["Open"],m=12)
+
+        self.df_bmo_auto_sarimax_mse=mean_squared_error(self.df_bmo_auto_sarimax)
+        self.df_bmo_auto_sarimax_mae=mean_absolute_error(self.df_bmo_auto_sarimax)
+        self.df_bmo_auto_sarimax_mape=mean_absolute_percentage_error(self.df_bmo_auto_sarimax)
+
+        
+    
 prediction=Prediction()
 prediction.plot_for_trend_and_seasonlity()
 prediction.plot_acf_adfuller()
 prediction.differencing_data()
 prediction.new_plot_acf_adfuller()
+prediction.SARIMA_model()
+prediction.auto_SARIMA_model()
