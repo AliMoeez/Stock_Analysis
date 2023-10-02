@@ -79,7 +79,10 @@ class Prediction(StockReturn):
         #the PACF has a large spike at lag 1 and drops to around 0 for all of the companies. This means we use a ARIMA(p,d,0) model.
         #We will do a SARIMA(0,1,0)(1,0,0)365 since differcing removed our trend and it was noted that a AR term will be used which
         #is seansonal due to the slow decay of the ACF and quick decay of the PACF after lag 1.
-        self.df_bmo_sarimax=SARIMAX(self.df_bmo_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit() ; self.df_scotia_sarimax=SARIMAX(self.df_scotia_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit()
+        self.df_bmo_sarimax=SARIMAX(self.df_bmo_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit() 
+        
+        
+        self.df_scotia_sarimax=SARIMAX(self.df_scotia_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit()
         self.df_naboc_sarimax=SARIMAX(self.df_naboc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit() ; self.df_rbc_sarimax=SARIMAX(self.df_rbc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit()
         self.df_td_sarimax=SARIMAX(self.df_td_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit() ; self.df_cibc_sarimax=SARIMAX(self.df_cibc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit()
 
@@ -98,30 +101,13 @@ class Prediction(StockReturn):
         self.df_td_auto_sarimax_forecast=self.df_td_auto_sarimax.predict(n_periods=len(self.df_td_total["Open"])) ; self.df_cibc_auto_sarimax_forecast=self.df_cibc_auto_sarimax.predict(n_periods=len(self.df_cibc_total["Open"]))
 
     def SARIMA_model_mse_mae_mape(self):
-
-        self.df_bmo_sarimax_mse=mean_squared_error(self.df_bmo_total["Open"],self.df_bmo_sarimax_forecast) 
-        self.df_bmo_sarimax_mae=mean_absolute_error(self.df_bmo_total["Open"],self.df_bmo_sarimax_forecast)
-        self.df_bmo_sarimax_mape=mean_absolute_percentage_error(self.df_bmo_total["Open"],self.df_bmo_sarimax_forecast)
-
-        self.df_scotia_sarimax_mse=mean_squared_error(self.df_scotia_total["Open"],self.df_scotia_sarimax_forecast)
-        self.df_scotia_sarimax_mae=mean_absolute_error(self.df_scotia_total["Open"],self.df_scotia_sarimax_forecast)
-        self.df_scotia_sarimax_mape=mean_absolute_percentage_error(self.df_scotia_total["Open"],self.df_scotia_sarimax_forecast)
-
-        self.df_naboc_sarimax_mse=mean_squared_error(self.df_naboc_total["Open"],self.df_naboc_sarimax_forecast)
-        self.df_naboc_sarimax_mae=mean_absolute_error(self.df_naboc_total["Open"],self.df_naboc_sarimax_forecast)
-        self.df_naboc_sarimax_mape=mean_absolute_percentage_error(self.df_naboc_total["Open"],self.df_naboc_sarimax_forecast)
-
-        self.df_rbc_sarimax_mse=mean_squared_error(self.df_rbc_total["Open"],self.df_rbc_sarimax_forecast)
-        self.df_rbc_sarimax_mae=mean_absolute_error(self.df_rbc_total["Open"],self.df_rbc_sarimax_forecast)
-        self.df_rbc_sarimax_mape=mean_absolute_percentage_error(self.df_rbc_total["Open"],self.df_rbc_sarimax_forecast)
-
-        self.df_td_sarimax_mse=mean_squared_error(self.df_td_total["Open"],self.df_td_sarimax_forecast)
-        self.df_td_sarimax_mae=mean_absolute_error(self.df_td_total["Open"],self.df_td_sarimax_forecast)
-        self.df_td_sarimax_mape=mean_absolute_percentage_error(self.df_td_total["Open"],self.df_td_sarimax_forecast)
-
-        self.df_cibc_sarimax_mse=mean_squared_error(self.df_cibc_total["Open"],self.df_cibc_sarimax_forecast)
-        self.df_cibc_sarimax_mae=mean_absolute_error(self.df_cibc_total["Open"],self.df_cibc_sarimax_forecast)
-        self.df_cibc_sarimax_mape=mean_absolute_percentage_error(self.df_cibc_total["Open"],self.df_cibc_sarimax_forecast)
+        #Calculate The MSE,MAE,MAPE for all the firms for the SARIMA model so we can compare it to the MSE,MAE,MAPE of the Auto SARIMA model where lower values of MSE,MAE,MAPE are indicative of a better model
+        self.df_bmo_sarimax_mse=mean_squared_error(self.df_bmo_total["Open"],self.df_bmo_sarimax_forecast)  ; self.df_bmo_sarimax_mae=mean_absolute_error(self.df_bmo_total["Open"],self.df_bmo_sarimax_forecast) ; self.df_bmo_sarimax_mape=mean_absolute_percentage_error(self.df_bmo_total["Open"],self.df_bmo_sarimax_forecast)
+        self.df_scotia_sarimax_mse=mean_squared_error(self.df_scotia_total["Open"],self.df_scotia_sarimax_forecast) ; self.df_scotia_sarimax_mae=mean_absolute_error(self.df_scotia_total["Open"],self.df_scotia_sarimax_forecast) ; self.df_scotia_sarimax_mape=mean_absolute_percentage_error(self.df_scotia_total["Open"],self.df_scotia_sarimax_forecast)
+        self.df_naboc_sarimax_mse=mean_squared_error(self.df_naboc_total["Open"],self.df_naboc_sarimax_forecast) ; self.df_naboc_sarimax_mae=mean_absolute_error(self.df_naboc_total["Open"],self.df_naboc_sarimax_forecast) ; self.df_naboc_sarimax_mape=mean_absolute_percentage_error(self.df_naboc_total["Open"],self.df_naboc_sarimax_forecast)
+        self.df_rbc_sarimax_mse=mean_squared_error(self.df_rbc_total["Open"],self.df_rbc_sarimax_forecast) ; self.df_rbc_sarimax_mae=mean_absolute_error(self.df_rbc_total["Open"],self.df_rbc_sarimax_forecast) ; self.df_rbc_sarimax_mape=mean_absolute_percentage_error(self.df_rbc_total["Open"],self.df_rbc_sarimax_forecast)
+        self.df_td_sarimax_mse=mean_squared_error(self.df_td_total["Open"],self.df_td_sarimax_forecast) ; self.df_td_sarimax_mae=mean_absolute_error(self.df_td_total["Open"],self.df_td_sarimax_forecast) ; self.df_td_sarimax_mape=mean_absolute_percentage_error(self.df_td_total["Open"],self.df_td_sarimax_forecast)
+        self.df_cibc_sarimax_mse=mean_squared_error(self.df_cibc_total["Open"],self.df_cibc_sarimax_forecast) ; self.df_cibc_sarimax_mae=mean_absolute_error(self.df_cibc_total["Open"],self.df_cibc_sarimax_forecast) ; self.df_cibc_sarimax_mape=mean_absolute_percentage_error(self.df_cibc_total["Open"],self.df_cibc_sarimax_forecast)
 
         self.df_bmo_sarima_mse_mae_mape_list=["BMO","SARIMA",self.df_bmo_sarimax_mse,self.df_bmo_sarimax_mae,self.df_bmo_sarimax_mape]
         self.df_scotia_sarima_mse_mae_mape_list=["Scotiabank","SARIMA",self.df_scotia_sarimax_mse,self.df_scotia_sarimax_mae,self.df_scotia_sarimax_mape]
@@ -130,38 +116,15 @@ class Prediction(StockReturn):
         self.df_td_sarima_mse_mae_mape_list=["TD","SARIMA",self.df_td_sarimax_mse,self.df_td_sarimax_mae,self.df_td_sarimax_mape]
         self.df_cibc_sarima_mse_mae_mape_list=["CIBC","SARIMA",self.df_cibc_sarimax_mse,self.df_cibc_sarimax_mae,self.df_cibc_sarimax_mape]
 
-        self.df_SARIMA_mse_mae_mape_list=[self.df_bmo_sarima_mse_mae_mape_list,
-                                   self.df_scotia_sarima_mse_mae_mape_list,
-                                   self.df_naboc_sarima_mse_mae_mape_list,
-                                   self.df_rbc_sarima_mse_mae_mape_list,
-                                   self.df_td_sarima_mse_mae_mape_list,
-                                   self.df_cibc_sarima_mse_mae_mape_list]
+        self.df_SARIMA_mse_mae_mape_list=[self.df_bmo_sarima_mse_mae_mape_list,self.df_scotia_sarima_mse_mae_mape_list,self.df_naboc_sarima_mse_mae_mape_list, self.df_rbc_sarima_mse_mae_mape_list, self.df_td_sarima_mse_mae_mape_list,self.df_cibc_sarima_mse_mae_mape_list]
 
     def auto_SARIMA_model_mse_mae_mape(self):
-        self.df_bmo_auto_sarimax_mse=mean_squared_error(self.df_bmo_total["Open"],self.df_bmo_auto_sarimax_forecast)
-        self.df_bmo_auto_sarimax_mae=mean_absolute_error(self.df_bmo_total["Open"],self.df_bmo_auto_sarimax_forecast)
-        self.df_bmo_auto_sarimax_mape=mean_absolute_percentage_error(self.df_bmo_total["Open"],self.df_bmo_auto_sarimax_forecast)
-
-        self.df_naboc_auto_sarimax_mse=mean_squared_error(self.df_naboc_total["Open"],self.df_naboc_auto_sarimax_forecast)
-        self.df_naboc_auto_sarimax_mae=mean_absolute_error(self.df_naboc_total["Open"],self.df_naboc_auto_sarimax_forecast)
-        self.df_naboc_auto_sarimax_mape=mean_absolute_percentage_error(self.df_naboc_total["Open"],self.df_naboc_auto_sarimax_forecast)
-
-        self.df_scotia_auto_sarimax_mse=mean_squared_error(self.df_scotia_total["Open"],self.df_scotia_auto_sarimax_forecast)
-        self.df_scotia_auto_sarimax_mae=mean_absolute_error(self.df_scotia_total["Open"],self.df_scotia_auto_sarimax_forecast)
-        self.df_scotia_auto_sarimax_mape=mean_absolute_percentage_error(self.df_scotia_total["Open"],self.df_scotia_auto_sarimax_forecast)
-
-        self.df_rbc_auto_sarimax_mse=mean_squared_error(self.df_rbc_total["Open"],self.df_rbc_auto_sarimax_forecast)
-        self.df_rbc_auto_sarimax_mae=mean_absolute_error(self.df_rbc_total["Open"],self.df_rbc_auto_sarimax_forecast)
-        self.df_rbc_auto_sarimax_mape=mean_absolute_percentage_error(self.df_rbc_total["Open"],self.df_rbc_auto_sarimax_forecast)
-
-        self.df_td_auto_sarimax_mse=mean_squared_error(self.df_td_total["Open"],self.df_td_auto_sarimax_forecast)
-        self.df_td_auto_sarimax_mae=mean_absolute_error(self.df_td_total["Open"],self.df_td_auto_sarimax_forecast)
-        self.df_td_auto_sarimax_mape=mean_absolute_percentage_error(self.df_td_total["Open"],self.df_td_auto_sarimax_forecast)
-
-
-        self.df_cibc_auto_sarimax_mse=mean_squared_error(self.df_cibc_total["Open"],self.df_cibc_auto_sarimax_forecast)
-        self.df_cibc_auto_sarimax_mae=mean_absolute_error(self.df_cibc_total["Open"],self.df_cibc_auto_sarimax_forecast)
-        self.df_cibc_auto_sarimax_mape=mean_absolute_percentage_error(self.df_cibc_total["Open"],self.df_cibc_auto_sarimax_forecast)
+        self.df_bmo_auto_sarimax_mse=mean_squared_error(self.df_bmo_total["Open"],self.df_bmo_auto_sarimax_forecast) ; self.df_bmo_auto_sarimax_mae=mean_absolute_error(self.df_bmo_total["Open"],self.df_bmo_auto_sarimax_forecast) ; self.df_bmo_auto_sarimax_mape=mean_absolute_percentage_error(self.df_bmo_total["Open"],self.df_bmo_auto_sarimax_forecast)
+        self.df_naboc_auto_sarimax_mse=mean_squared_error(self.df_naboc_total["Open"],self.df_naboc_auto_sarimax_forecast) ; self.df_naboc_auto_sarimax_mae=mean_absolute_error(self.df_naboc_total["Open"],self.df_naboc_auto_sarimax_forecast) ; self.df_naboc_auto_sarimax_mape=mean_absolute_percentage_error(self.df_naboc_total["Open"],self.df_naboc_auto_sarimax_forecast)
+        self.df_scotia_auto_sarimax_mse=mean_squared_error(self.df_scotia_total["Open"],self.df_scotia_auto_sarimax_forecast) ; self.df_scotia_auto_sarimax_mae=mean_absolute_error(self.df_scotia_total["Open"],self.df_scotia_auto_sarimax_forecast) ; self.df_scotia_auto_sarimax_mape=mean_absolute_percentage_error(self.df_scotia_total["Open"],self.df_scotia_auto_sarimax_forecast)
+        self.df_rbc_auto_sarimax_mse=mean_squared_error(self.df_rbc_total["Open"],self.df_rbc_auto_sarimax_forecast) ; self.df_rbc_auto_sarimax_mae=mean_absolute_error(self.df_rbc_total["Open"],self.df_rbc_auto_sarimax_forecast) ; self.df_rbc_auto_sarimax_mape=mean_absolute_percentage_error(self.df_rbc_total["Open"],self.df_rbc_auto_sarimax_forecast)
+        self.df_td_auto_sarimax_mse=mean_squared_error(self.df_td_total["Open"],self.df_td_auto_sarimax_forecast) ; self.df_td_auto_sarimax_mae=mean_absolute_error(self.df_td_total["Open"],self.df_td_auto_sarimax_forecast) ; self.df_td_auto_sarimax_mape=mean_absolute_percentage_error(self.df_td_total["Open"],self.df_td_auto_sarimax_forecast)
+        self.df_cibc_auto_sarimax_mse=mean_squared_error(self.df_cibc_total["Open"],self.df_cibc_auto_sarimax_forecast) ; self.df_cibc_auto_sarimax_mae=mean_absolute_error(self.df_cibc_total["Open"],self.df_cibc_auto_sarimax_forecast) ; self.df_cibc_auto_sarimax_mape=mean_absolute_percentage_error(self.df_cibc_total["Open"],self.df_cibc_auto_sarimax_forecast)
 
         self.df_bmo_auto_arima_mse_mae_mape_list=["BMO","Auto SARIMA",self.df_bmo_auto_sarimax_mse,self.df_bmo_auto_sarimax_mae,self.df_bmo_auto_sarimax_mape]
         self.df_naboc_auto_arima_mse_mae_mape_list=["National Bank","Auto SARIMA",self.df_naboc_auto_sarimax_mse,self.df_naboc_auto_sarimax_mae,self.df_naboc_auto_sarimax_mape]
@@ -170,32 +133,59 @@ class Prediction(StockReturn):
         self.df_td_auto_arima_mse_mae_mape_list=["TD","Auto SARIMA",self.df_td_auto_sarimax_mse,self.df_td_auto_sarimax_mae,self.df_td_auto_sarimax_mape]
         self.df_cibc_auto_arima_mse_mae_mape_list=["CIBC","Auto SARIMA",self.df_cibc_auto_sarimax_mse,self.df_cibc_auto_sarimax_mae,self.df_cibc_auto_sarimax_mape]
 
-        self.df_auto_arima_mse_mae_mape_list=[
-            self.df_bmo_auto_arima_mse_mae_mape_list,
-            self.df_naboc_auto_arima_mse_mae_mape_list,
-            self.df_scotia_auto_arima_mse_mae_mape_list,
-            self.df_rbc_auto_arima_mse_mae_mape_list,
-            self.df_td_auto_arima_mse_mae_mape_list,
-            self.df_cibc_auto_arima_mse_mae_mape_list
-        ]
+        self.df_auto_arima_mse_mae_mape_list=[self.df_bmo_auto_arima_mse_mae_mape_list,self.df_naboc_auto_arima_mse_mae_mape_list,self.df_scotia_auto_arima_mse_mae_mape_list,self.df_rbc_auto_arima_mse_mae_mape_list,self.df_td_auto_arima_mse_mae_mape_list,self.df_cibc_auto_arima_mse_mae_mape_list]
 
     def display_company_mse_mae_mape(self,company:str):
-        #This function will compare the results of the MAE,MSE and MAPE given some company input lower values are deemed to be better for MAE,MSE and MAPE
+        #This function will compare the results of the MAE,MSE and MAPE given some company input. Lower values are deemed to be better for MAE,MSE and MAPE
         for i in self.df_SARIMA_mse_mae_mape_list:
             for j in self.df_auto_arima_mse_mae_mape_list:
                 if company==i[0] and company==j[0]:
                     print(i,j)
-        #When these values are compated we see that all but RBC has better results with respect to MAE,MSE and MAPE (atleast 2 of the 3 metrics is
-        #greater in the SARIMA model choosen by me) in the model made by me. In the dashbaord the SARIMA and its forecast made by me will be used.
-                    
+        #When these values are compared we see that all but RBC has better results in my model with respect to MAE,MSE and MAPE (atleast 2 of the 3 metrics is
+        #less in the SARIMA model choosen by me).In the dashbaord the SARIMA and its forecast made by me will be used.
 
+    def plot_residuals(self):
+        #First we will get the SARIMA residuals and check if they are normally distributed before procdeeding to plotting the forecasts
+        self.df_bmo_sarima_residuals=self.df_bmo_sarimax.resid[1:] ; self.df_naboc_sarima_residuals=self.df_naboc_sarimax.resid[1:] 
+        self.df_scotia_sarima_residuals=self.df_scotia_sarimax.resid[1:] ; self.df_rbc_sarima_residuals=self.df_rbc_sarimax.resid[1:]
+        self.df_td_sarima_residuals=self.df_td_sarimax.resid[1:] ; self.df_cibc_sarima_residuals=self.df_cibc_sarimax.resid[1:]
+
+        fig,ax=plt.subplots(2,3)
+        self.df_bmo_sarima_residuals.plot(kind='kde',ax=ax[0,0]) ; self.df_naboc_sarima_residuals.plot(kind='kde',ax=ax[0,1])
+        self.df_scotia_sarima_residuals.plot(kind='kde',ax=ax[0,2]) ; self.df_rbc_sarima_residuals.plot(kind='kde',ax=ax[1,0])
+        self.df_td_sarima_residuals.plot(kind='kde',ax=ax[1,1]) ; self.df_cibc_sarima_residuals.plot(kind='kde',ax=ax[1,2])
+        #We see that all of the residuals are normally distriuted meaning we can proceed with plotting the forecast
+
+
+    """def model_graph_forecast(self):
+        plt.style.use("dark_background")
+        fig,ax=plt.subplots(1,2,figsize=(12,5))
+        fig.subplots_adjust(left=0.348,bottom=0.11,right=1,top=0.867,wspace=0,hspace=0.202)
+        ax[1].set_visible(False)
+        self.data[self.data_use_entry.get()].plot(ax=ax[0])
+        plot_predict(self.arima_shown,len(self.data[self.data_use_entry.get()])-(len(self.data[self.data_use_entry.get()])//3),len(self.data[self.data_use_entry.get()])+len(self.data[self.data_use_entry.get()])//3,ax=ax[0])
+        plt.show()"""
+
+    
+    def plot_forecast(self):
+        #In this function we will plot the predictions of the companies with their 95% confidecne internvals
+        fig,ax=plt.subplots(2,3)
+        self.df_bmo_total["Open"].plot(ax=ax[0,0])
+        plot_predict(self.df_bmo_sarimax,200,275,ax=ax[0,0])
+        plt.show()
+
+
+        
+                    
 prediction=Prediction()
 prediction.plot_for_trend_and_seasonlity()
 prediction.plot_acf_adfuller()
 prediction.differencing_data()
 prediction.new_plot_acf_adfuller()
 prediction.SARIMA_model()
-prediction.auto_SARIMA_model()
+#prediction.auto_SARIMA_model()
 prediction.SARIMA_model_mse_mae_mape()
-prediction.auto_SARIMA_model_mse_mae_mape()
-prediction.display_company_mse_mae_mape("RBC")
+#prediction.auto_SARIMA_model_mse_mae_mape()
+#prediction.display_company_mse_mae_mape("RBC")
+prediction.plot_residuals()
+prediction.plot_forecast()
