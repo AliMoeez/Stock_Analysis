@@ -79,12 +79,11 @@ class Prediction(StockReturn):
         #the PACF has a large spike at lag 1 and drops to around 0 for all of the companies. This means we use a ARIMA(p,d,0) model.
         #We will do a SARIMA(0,1,0)(1,0,0)365 since differcing removed our trend and it was noted that a AR term will be used which
         #is seansonal due to the slow decay of the ACF and quick decay of the PACF after lag 1.
-        self.df_bmo_sarimax=SARIMAX(self.df_bmo_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit() 
-        
-        
-        self.df_scotia_sarimax=SARIMAX(self.df_scotia_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit()
-        self.df_naboc_sarimax=SARIMAX(self.df_naboc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit() ; self.df_rbc_sarimax=SARIMAX(self.df_rbc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit()
-        self.df_td_sarimax=SARIMAX(self.df_td_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit() ; self.df_cibc_sarimax=SARIMAX(self.df_cibc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,12)).fit()
+        self.df_bmo_sarimax=SARIMAX(self.df_bmo_total["Open"],order=(1,0,0),seasonal_order=(1,0,0,30)).fit() 
+
+        self.df_scotia_sarimax=SARIMAX(self.df_scotia_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit()
+        self.df_naboc_sarimax=SARIMAX(self.df_naboc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit() ; self.df_rbc_sarimax=SARIMAX(self.df_rbc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit()
+        self.df_td_sarimax=SARIMAX(self.df_td_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit() ; self.df_cibc_sarimax=SARIMAX(self.df_cibc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit()
 
         self.df_bmo_sarimax_forecast=self.df_bmo_sarimax.forecast(len(self.df_bmo_total["Open"])) ; self.df_scotia_sarimax_forecast=self.df_scotia_sarimax.forecast(len(self.df_scotia_total["Open"]))
         self.df_naboc_sarimax_forecast=self.df_naboc_sarimax.forecast(len(self.df_naboc_total["Open"])) ; self.df_rbc_sarimax_forecast=self.df_rbc_sarimax.forecast(len(self.df_rbc_total["Open"]))
@@ -155,25 +154,30 @@ class Prediction(StockReturn):
         self.df_scotia_sarima_residuals.plot(kind='kde',ax=ax[0,2]) ; self.df_rbc_sarima_residuals.plot(kind='kde',ax=ax[1,0])
         self.df_td_sarima_residuals.plot(kind='kde',ax=ax[1,1]) ; self.df_cibc_sarima_residuals.plot(kind='kde',ax=ax[1,2])
         #We see that all of the residuals are normally distriuted meaning we can proceed with plotting the forecast
-
-
-    """def model_graph_forecast(self):
-        plt.style.use("dark_background")
-        fig,ax=plt.subplots(1,2,figsize=(12,5))
-        fig.subplots_adjust(left=0.348,bottom=0.11,right=1,top=0.867,wspace=0,hspace=0.202)
-        ax[1].set_visible(False)
-        self.data[self.data_use_entry.get()].plot(ax=ax[0])
-        plot_predict(self.arima_shown,len(self.data[self.data_use_entry.get()])-(len(self.data[self.data_use_entry.get()])//3),len(self.data[self.data_use_entry.get()])+len(self.data[self.data_use_entry.get()])//3,ax=ax[0])
-        plt.show()"""
-
     
     def plot_forecast(self):
         #In this function we will plot the predictions of the companies with their 95% confidecne internvals
         fig,ax=plt.subplots(2,3)
+        
         self.df_bmo_total["Open"].plot(ax=ax[0,0])
         plot_predict(self.df_bmo_sarimax,200,275,ax=ax[0,0])
-        plt.show()
 
+        self.df_scotia_total["Open"].plot(ax=ax[0,1])
+        plot_predict(self.df_scotia_sarimax,200,275,ax=ax[0,1])
+        
+        self.df_naboc_total["Open"].plot(ax=ax[0,2])
+        plot_predict(self.df_naboc_sarimax,200,275,ax=ax[0,2])
+       
+        self.df_rbc_total["Open"].plot(ax=ax[1,0])
+        plot_predict(self.df_rbc_sarimax,200,275,ax=ax[1,0])
+        
+        self.df_td_total["Open"].plot(ax=ax[1,1])
+        plot_predict(self.df_td_sarimax,200,275,ax=ax[1,1])
+
+        self.df_cibc_total["Open"].plot(ax=ax[1,2])
+        plot_predict(self.df_cibc_sarimax,200,275,ax=ax[1,2])
+        
+        plt.show()
 
         
                     
