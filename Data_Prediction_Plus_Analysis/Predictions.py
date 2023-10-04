@@ -10,7 +10,7 @@ from sklearn.metrics import mean_squared_error,mean_absolute_error,mean_absolute
 import matplotlib.pyplot as plt
 from pmdarima import auto_arima
 
-from Stock_Return import StockReturn
+from .Stock_Return import StockReturn
 
 class Prediction(StockReturn):
     def __init__(self):
@@ -179,17 +179,17 @@ class Prediction(StockReturn):
         
         plt.show()
 
-        
+       
                     
-prediction=Prediction()
-prediction.plot_for_trend_and_seasonlity()
-prediction.plot_acf_adfuller()
-prediction.differencing_data()
-prediction.new_plot_acf_adfuller()
-prediction.SARIMA_model()
+#prediction=Prediction()
+#prediction.plot_for_trend_and_seasonlity()
+#prediction.plot_acf_adfuller()
+#prediction.differencing_data()
+#prediction.new_plot_acf_adfuller()
+#prediction.SARIMA_model()
 #prediction.auto_SARIMA_model()
-prediction.SARIMA_model_mse_mae_mape()
+#prediction.SARIMA_model_mse_mae_mape()
 #prediction.auto_SARIMA_model_mse_mae_mape()
 #prediction.display_company_mse_mae_mape("RBC")
-prediction.plot_residuals()
-prediction.plot_forecast()
+#prediction.plot_residuals()
+#prediction.plot_forecast()

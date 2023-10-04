@@ -59,9 +59,26 @@ class StockReturn:
         self.td_total_dividend=sum(self.df_td_total["Dividends"]) ; self.td_open_price=self.df_td_total["Open"].iloc[0] ; self.td_close_price=self.df_td_total["Close"].iloc[-1]
         self.td_yearly_stock_return=round(((self.td_close_price-self.td_open_price+self.td_total_dividend)/self.td_open_price)*100,4)
 
+    def df_all_daily_return(self):
+        self.df_all_returns=pd.DataFrame(
+            data={
+            "Date":self.df_bmo_total["Date"],
+            "BMO":self.df_bmo_total["Daily Returns"],
+            "Scotiabank":self.df_scotia_total["Daily Returns"],
+            "National Bank of Canada":self.df_naboc_total["Daily Returns"],
+            "RBC":self.df_rbc_total["Daily Returns"],
+            "TD":self.df_td_total["Daily Returns"],
+            "CIBC":self.df_cibc_total["Daily Returns"]
+        })
+
+        return self.df_all_returns
+    
+
+
 stockreturn=StockReturn()
 stockreturn.data_consolidation()
 stockreturn.daily_stock_return()
 stockreturn.yearly_stock_return()
+stockreturn.df_all_daily_return()
 
 

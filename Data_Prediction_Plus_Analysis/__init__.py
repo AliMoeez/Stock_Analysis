@@ -1,1 +1,1 @@
-from .Max_Min_Price import MaxMin
+from .Stock_Return import StockReturn

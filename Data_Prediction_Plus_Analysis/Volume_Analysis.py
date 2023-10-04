@@ -6,7 +6,7 @@
 import pandas as pd
 
 #import stock_return file to get the daily stock returns from the StockReturn class
-from Stock_Return import StockReturn
+from .Stock_Return import StockReturn
 
 class VolumeAnalysis(StockReturn):
     def __init__(self):
@@ -58,7 +58,7 @@ class VolumeAnalysis(StockReturn):
         print(self.df_td_volume_stock_change_correlation)
 
 
-volumeanalysis=VolumeAnalysis()
-volumeanalysis.daily_volume_change()
-volumeanalysis.corrleation_volume_change()
-volumeanalysis.correlation_with_stock_price()
+#volumeanalysis=VolumeAnalysis()
+#volumeanalysis.daily_volume_change()
+#volumeanalysis.corrleation_volume_change()
+#volumeanalysis.correlation_with_stock_price()
