@@ -14,3 +14,29 @@ h2 {
     font-size: 30px;
     font-family: Georgia, 'Times New Roman', Times, serif
 }
+
+a{font-size:25px}
+
+a{font-family:Georgia, 'Times New Roman', Times, serif}
+
+a:link{
+    color:#AC3E31
+   
+}
+
+a:visited{
+    color:#AC3E31;
+    
+
+}
+
+a:hover{
+    color:orangered
+    
+
+}
+
+a:active{
+    color:orangered
+
+}
