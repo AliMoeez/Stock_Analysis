@@ -3,7 +3,7 @@ from dash import Dash,html,dash_table,dcc,Input,Output,callback
 import pandas as pd 
 import plotly.express as px
 
-from Data_Prediction_Plus_Analysis import StockReturn,Volume_Analysis,Predictions
+from Data_Prediction_Plus_Analysis import StockReturn
 
 stockreturn=StockReturn()
 stockreturn.data_consolidation()
@@ -35,6 +35,8 @@ def show_daily_stock_return(ticker):
     df_daily_stock_return=all_daily_returns
     if ticker!="Total":
         figure=px.line(df_daily_stock_return,x="Date",y=ticker)
+        figure.update_layout(plot_bgcolor='#484848',paper_bgcolor='#484848',font_color="#FFFFFF")
     else:
         figure=px.line(df_daily_stock_return,x="Date",y=df_daily_stock_return.columns,labels={"value":"All Companies"})
+        figure.update_layout(plot_bgcolor='#484848',paper_bgcolor='#484848',font_color="#FFFFFF")
     return figure

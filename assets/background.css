@@ -40,3 +40,17 @@ a:active{
     color:orangered
 
 }
+
+.Select-control{
+    background-color:#484848 !important;
+    color: #FFFFFF;
+}
+
+.Select-menu-outer {
+    background-color:#484848;
+    color: #FFFFFF;
+}
+
+.Select-value-label{
+    color: #FFFFFF !important;
+}

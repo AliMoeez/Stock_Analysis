@@ -50,15 +50,31 @@ class VolumeAnalysis(StockReturn):
         #There is a very slight negative correlation between volume change and stock return. That is as volume change goes up
         #the return goes down or vice versa. But again this correlation is small.
 
-        print(self.df_bmo_volume_stock_change_correlation)
-        print(self.df_scotiabank_volume_stock_change_correlation)
-        print(self.df_naboc_volume_stock_change_correlation)
-        print(self.df_rbc_volume_stock_change_correlation)
-        print(self.df_cibc_volume_stock_change_correlation)
-        print(self.df_td_volume_stock_change_correlation)
+        #print(self.df_bmo_volume_stock_change_correlation)
+        #print(self.df_scotiabank_volume_stock_change_correlation)
+        #print(self.df_naboc_volume_stock_change_correlation)
+        #print(self.df_rbc_volume_stock_change_correlation)
+        #print(self.df_cibc_volume_stock_change_correlation)
+        #print(self.df_td_volume_stock_change_correlation)
+
+    def change_table(self):
+        self.all_volume_change=pd.DataFrame(
+            data={
+                "Date": self.df_bmo_total["Date"],
+                "BMO": self.df_bmo_total["Volume Change"],
+                "Scotiabank": self.df_scotia_total["Volume Change"],
+                "National Bank of Canada": self.df_naboc_total["Volume Change"],
+                "RBC":self.df_rbc_total["Volume Change"],
+                "TD": self.df_td_total["Volume Change"],
+                "CIBC":self.df_cibc_total["Volume Change"]
+            }
+        )
+        
+        return self.all_volume_change
 
 
-#volumeanalysis=VolumeAnalysis()
-#volumeanalysis.daily_volume_change()
-#volumeanalysis.corrleation_volume_change()
-#volumeanalysis.correlation_with_stock_price()
+volumeanalysis=VolumeAnalysis()
+volumeanalysis.daily_volume_change()
+volumeanalysis.corrleation_volume_change()
+volumeanalysis.correlation_with_stock_price()
+volumeanalysis.change_table()
