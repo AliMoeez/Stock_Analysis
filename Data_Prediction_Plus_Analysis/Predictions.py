@@ -79,13 +79,33 @@ class Prediction(StockReturn):
         #the PACF has a large spike at lag 1 and drops to around 0 for all of the companies. This means we use a ARIMA(p,d,0) model.
         #We will do a SARIMA(0,1,0)(1,0,0)365 since differcing removed our trend and it was noted that a AR term will be used which
         #is seansonal due to the slow decay of the ACF and quick decay of the PACF after lag 1.
-        self.df_bmo_sarimax=SARIMAX(self.df_bmo_total["Open"],order=(1,0,0),seasonal_order=(1,0,0,30)).fit() 
+        self.df_bmo_sarimax=SARIMAX(self.df_bmo_total["Open"],order=(1,0,0),seasonal_order=(1,0,0,30))
+        
+        self.df_bmo_sarimax=self.df_bmo_sarimax.fit(disp=False)
 
-        self.df_scotia_sarimax=SARIMAX(self.df_scotia_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit()
-        self.df_naboc_sarimax=SARIMAX(self.df_naboc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit() ; self.df_rbc_sarimax=SARIMAX(self.df_rbc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit()
-        self.df_td_sarimax=SARIMAX(self.df_td_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit() ; self.df_cibc_sarimax=SARIMAX(self.df_cibc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30)).fit()
+        self.df_scotia_sarimax=SARIMAX(self.df_scotia_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30))
+
+        self.df_scotia_sarimax=self.df_scotia_sarimax.fit(disp=False)
+
+        self.df_naboc_sarimax=SARIMAX(self.df_naboc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30))
+
+        self.df_naboc_sarimax=self.df_naboc_sarimax.fit(disp=False)
+
+
+        self.df_rbc_sarimax=SARIMAX(self.df_rbc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30))
+
+        self.df_rbc_sarimax=self.df_rbc_sarimax.fit(disp=False)
+
+        self.df_td_sarimax=SARIMAX(self.df_td_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30))
+
+        self.df_td_sarimax=self.df_td_sarimax.fit(disp=False)
+
+        self.df_cibc_sarimax=SARIMAX(self.df_cibc_total["Open"],order=(0,1,0),seasonal_order=(1,0,0,30))
+
+        self.df_cibc_sarimax=self.df_cibc_sarimax.fit(disp=False)
 
         self.df_bmo_sarimax_forecast=self.df_bmo_sarimax.forecast(len(self.df_bmo_total["Open"])) ; self.df_scotia_sarimax_forecast=self.df_scotia_sarimax.forecast(len(self.df_scotia_total["Open"]))
+
         self.df_naboc_sarimax_forecast=self.df_naboc_sarimax.forecast(len(self.df_naboc_total["Open"])) ; self.df_rbc_sarimax_forecast=self.df_rbc_sarimax.forecast(len(self.df_rbc_total["Open"]))
         self.df_td_sarimax_forecast=self.df_td_sarimax.forecast(len(self.df_td_total["Open"])) ; self.df_cibc_sarimax_forecast=self.df_cibc_sarimax.forecast(len(self.df_cibc_total["Open"]))
 
@@ -177,16 +197,46 @@ class Prediction(StockReturn):
         self.df_cibc_total["Open"].plot(ax=ax[1,2])
         plot_predict(self.df_cibc_sarimax,200,275,ax=ax[1,2])
         
-        plt.show()
+     #   plt.show()
 
-       
-                    
-#prediction=Prediction()
+    def arima_predictions(self):
+        self.all_arima_predictions=pd.DataFrame(
+            data={
+                "Date":self.df_bmo_total["Date"],
+              #  "BMO":self.df_bmo_total["Open"],
+              #  "Scotiabank":self.df_scotia_total["Open"],
+              #  "National Bank of Canada":self.df_naboc_total["Open"],
+              #  "RBC":self.df_rbc_total["Open"],
+              #  "TD":self.df_td_total["Open"],
+              #  "CIBC":self.df_cibc_total["Open"]
+            }
+        )
+
+        self.all_arima_predictions_forecast=pd.DataFrame(
+            data={
+                "Date":self.df_bmo_total["Date"],
+                "BMO":self.df_bmo_sarimax_forecast,
+                "Scotiabank":self.df_scotia_sarimax_forecast,
+                "National Bank of Canada":self.df_naboc_sarimax_forecast,
+                "RBC":self.df_rbc_sarimax_forecast,
+                "TD":self.df_td_sarimax_forecast,
+                "CIBC":self.df_cibc_sarimax_forecast
+            }
+        )
+
+      #  print(self.all_arima_predictions["BMO"],self.all_arima_predictions_forecast["BMO"])
+
+        print(self.df_bmo_sarimax_forecast)
+
+        return self.all_arima_predictions,self.all_arima_predictions_forecast
+
+
+prediction=Prediction()
 #prediction.plot_for_trend_and_seasonlity()
 #prediction.plot_acf_adfuller()
 #prediction.differencing_data()
 #prediction.new_plot_acf_adfuller()
-#prediction.SARIMA_model()
+prediction.SARIMA_model()
 #prediction.auto_SARIMA_model()
 #prediction.SARIMA_model_mse_mae_mape()
 #prediction.auto_SARIMA_model_mse_mae_mape()
