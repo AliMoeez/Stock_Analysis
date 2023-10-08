@@ -226,7 +226,6 @@ class Prediction(StockReturn):
 
       #  print(self.all_arima_predictions["BMO"],self.all_arima_predictions_forecast["BMO"])
 
-        print(self.df_bmo_sarimax_forecast)
 
         return self.all_arima_predictions,self.all_arima_predictions_forecast
 

@@ -2,6 +2,7 @@ import dash
 from dash import Dash,html,dash_table,dcc,Input,Output
 import pandas as pd 
 import plotly.express as px
+import plotly.graph_objects as go
 
 
 app=Dash(__name__,use_pages=True)

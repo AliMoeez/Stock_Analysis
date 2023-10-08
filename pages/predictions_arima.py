@@ -2,8 +2,7 @@ import dash
 from dash import Dash,html,dash_table,dcc,Input,Output,callback
 import pandas as pd 
 import plotly.express as px
-
-
+import plotly.graph_objects as go
 from  Data_Prediction_Plus_Analysis import Prediction
 
 prediction=Prediction()
