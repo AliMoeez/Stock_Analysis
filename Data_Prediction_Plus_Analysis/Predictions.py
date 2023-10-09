@@ -9,6 +9,7 @@ from statsmodels.tsa.stattools import adfuller
 from sklearn.metrics import mean_squared_error,mean_absolute_error,mean_absolute_percentage_error
 import matplotlib.pyplot as plt
 from pmdarima import auto_arima
+import datetime
 
 from .Stock_Return import StockReturn
 
@@ -104,10 +105,13 @@ class Prediction(StockReturn):
 
         self.df_cibc_sarimax=self.df_cibc_sarimax.fit(disp=False)
 
-        self.df_bmo_sarimax_forecast=self.df_bmo_sarimax.forecast(len(self.df_bmo_total["Open"])) ; self.df_scotia_sarimax_forecast=self.df_scotia_sarimax.forecast(len(self.df_scotia_total["Open"]))
+        self.df_bmo_sarimax_forecast=self.df_bmo_sarimax.forecast(50) 
+        self.df_scotia_sarimax_forecast=self.df_scotia_sarimax.forecast(50)
 
-        self.df_naboc_sarimax_forecast=self.df_naboc_sarimax.forecast(len(self.df_naboc_total["Open"])) ; self.df_rbc_sarimax_forecast=self.df_rbc_sarimax.forecast(len(self.df_rbc_total["Open"]))
-        self.df_td_sarimax_forecast=self.df_td_sarimax.forecast(len(self.df_td_total["Open"])) ; self.df_cibc_sarimax_forecast=self.df_cibc_sarimax.forecast(len(self.df_cibc_total["Open"]))
+        self.df_naboc_sarimax_forecast=self.df_naboc_sarimax.forecast(50) 
+        self.df_rbc_sarimax_forecast=self.df_rbc_sarimax.forecast(50)
+        self.df_td_sarimax_forecast=self.df_td_sarimax.forecast(50) 
+        self.df_cibc_sarimax_forecast=self.df_cibc_sarimax.forecast(50)
 
     def auto_SARIMA_model(self):
         #Can use auto_arima to create a automatic arima model based on AIC characteristics
@@ -199,35 +203,66 @@ class Prediction(StockReturn):
         
      #   plt.show()
 
+    def confidence_interval(self):
+        self.df_bmo_confidence_interval=self.df_bmo_sarimax.get_forecast(50).conf_int(alpha=0.05)
+        self.df_naboc_confidence_interval=self.df_naboc_sarimax.get_forecast(50).conf_int(alpha=0.05)
+        self.df_rbc_confidence_interval=self.df_rbc_sarimax.get_forecast(50).conf_int(alpha=0.05)
+        self.df_td_confidence_interval=self.df_td_sarimax.get_forecast(50).conf_int(alpha=0.05)
+        self.df_scotia_confidence_interval=self.df_scotia_sarimax.get_forecast(50).conf_int(alpha=0.05)
+        self.df_cibc_confidence_interval=self.df_cibc_sarimax.get_forecast(50).conf_int(alpha=0.05)
+
+        self.df_bmo_ci_lower=self.df_bmo_confidence_interval["lower Open"]
+        self.df_naboc_ci_lower=self.df_naboc_confidence_interval["lower Open"]
+        self.df_rbc_ci_lower=self.df_rbc_confidence_interval["lower Open"]
+        self.df_td_ci_lower=self.df_td_confidence_interval["lower Open"]
+        self.df_scotia_ci_lower=self.df_scotia_confidence_interval["lower Open"]
+        self.df_cibc_ci_lower=self.df_cibc_confidence_interval["lower Open"]
+
+        self.df_bmo_ci_upper=self.df_bmo_confidence_interval["upper Open"]
+        self.df_naboc_ci_upper=self.df_naboc_confidence_interval["upper Open"]
+        self.df_rbc_ci_upper=self.df_rbc_confidence_interval["upper Open"]
+        self.df_td_ci_upper=self.df_td_confidence_interval["upper Open"]
+        self.df_scotia_ci_upper=self.df_scotia_confidence_interval["upper Open"]
+        self.df_cibc_ci_upper=self.df_cibc_confidence_interval["upper Open"]
+
+
     def arima_predictions(self):
+        self.last_date="2023-09-20"
+        self.forecasted_date=[]
+        for i in range(50):
+            self.new_date=pd.to_datetime(self.last_date)+datetime.timedelta(days=i)
+            self.forecasted_date.append(self.new_date.strftime("%Y-%m-%d"))
+        
+
         self.all_arima_predictions=pd.DataFrame(
             data={
-                "Date":self.df_bmo_total["Date"],
-              #  "BMO":self.df_bmo_total["Open"],
-              #  "Scotiabank":self.df_scotia_total["Open"],
-              #  "National Bank of Canada":self.df_naboc_total["Open"],
-              #  "RBC":self.df_rbc_total["Open"],
-              #  "TD":self.df_td_total["Open"],
-              #  "CIBC":self.df_cibc_total["Open"]
+                "Date":self.df_bmo_total["Date"], "BMO":self.df_bmo_total["Open"], "Scotiabank":self.df_scotia_total["Open"],
+                "National Bank of Canada":self.df_naboc_total["Open"], "RBC":self.df_rbc_total["Open"], "TD":self.df_td_total["Open"], "CIBC":self.df_cibc_total["Open"]
             }
         )
 
         self.all_arima_predictions_forecast=pd.DataFrame(
             data={
-                "Date":self.df_bmo_total["Date"],
-                "BMO":self.df_bmo_sarimax_forecast,
-                "Scotiabank":self.df_scotia_sarimax_forecast,
-                "National Bank of Canada":self.df_naboc_sarimax_forecast,
-                "RBC":self.df_rbc_sarimax_forecast,
-                "TD":self.df_td_sarimax_forecast,
-                "CIBC":self.df_cibc_sarimax_forecast
+                "Date":self.forecasted_date, "BMO":self.df_bmo_sarimax_forecast, "Scotiabank":self.df_scotia_sarimax_forecast,
+                "National Bank of Canada":self.df_naboc_sarimax_forecast, "RBC":self.df_rbc_sarimax_forecast, "TD":self.df_td_sarimax_forecast, "CIBC":self.df_cibc_sarimax_forecast
             }
         )
 
-      #  print(self.all_arima_predictions["BMO"],self.all_arima_predictions_forecast["BMO"])
+        self.arima_forecast_upper_ci=pd.DataFrame(
+            data={
+                "Date":self.forecasted_date, "BMO":self.df_bmo_ci_upper, "Scotiabank":self.df_scotia_ci_upper, 
+                "National Bank of Canada":self.df_naboc_ci_upper, "RBC":self.df_rbc_ci_upper, "TD":self.df_td_ci_upper, "CIBC":self.df_cibc_ci_upper
+            }
+        )
 
+        self.arima_forecast_lower_ci=pd.DataFrame(
+            data={
+                "Date":self.forecasted_date,"BMO":self.df_bmo_ci_lower, "Scotiabank":self.df_scotia_ci_lower,
+                "National Bank of Canada":self.df_naboc_ci_lower, "RBC":self.df_rbc_ci_lower, "TD":self.df_td_ci_lower, "CIBC":self.df_cibc_ci_lower
+            }
+        )
 
-        return self.all_arima_predictions,self.all_arima_predictions_forecast
+        return self.all_arima_predictions,self.all_arima_predictions_forecast,self.arima_forecast_upper_ci,self.arima_forecast_lower_ci
 
 
 prediction=Prediction()
@@ -236,6 +271,7 @@ prediction=Prediction()
 #prediction.differencing_data()
 #prediction.new_plot_acf_adfuller()
 prediction.SARIMA_model()
+prediction.confidence_interval()
 #prediction.auto_SARIMA_model()
 #prediction.SARIMA_model_mse_mae_mape()
 #prediction.auto_SARIMA_model_mse_mae_mape()

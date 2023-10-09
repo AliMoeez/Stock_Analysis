@@ -2,12 +2,14 @@ import dash
 from dash import Dash,html,dash_table,dcc,Input,Output,callback
 import pandas as pd 
 import plotly.express as px
+from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 from  Data_Prediction_Plus_Analysis import Prediction
 
 prediction=Prediction()
 prediction.SARIMA_model()
-all_arima,all_arima_forecast=prediction.arima_predictions()
+prediction.confidence_interval()
+all_arima,all_arima_forecast,arima_ci_upper,arima_ci_lower=prediction.arima_predictions()
 
 
 dash.register_page(__name__)
@@ -28,10 +30,20 @@ layout=html.Div([
     Input("TS Prediction ARIMA ids","value")
 )
 
-#def display_time_series(ticker):
-#    figure=px.line(all_arima,x="Date",y=ticker)
-#    return figure
+def display_time_series(ticker):
+    figure=make_subplots(rows=1,cols=1)
+    figure.update_layout(plot_bgcolor='#484848',paper_bgcolor='#484848',font_color="#FFFFFF")
+    figure.append_trace(go.Scatter(x=all_arima["Date"],y=all_arima[ticker],mode="lines",name="Data",),row=1,col=1)
+    figure.append_trace(go.Scatter(x=all_arima_forecast["Date"],y=all_arima_forecast[ticker],mode="lines",name="Forecast"),row=1,col=1)
 
-def display_time_series_forecast(ticker):
-    figure=px.line(all_arima_forecast,x="Date",y=ticker)
+    figure.append_trace(go.Scatter(x=arima_ci_upper["Date"],y=arima_ci_upper[ticker],mode="lines",
+                                name="Forecast CI",marker=dict(color="grey"),
+                                line=dict(width=1)),row=1,col=1)
+    
+    figure.append_trace(go.Scatter(x=arima_ci_lower["Date"],y=arima_ci_lower[ticker],mode="lines",
+                                name="Forecast CI",marker=dict(color="grey"),
+                                line=dict(width=1),fillcolor='rgba(10,10,10,0.3)',fill='tonexty'),row=1,col=1)
+
     return figure
+
+
