@@ -32,18 +32,27 @@ class NeuralNetowrkAnalysis:
 
     def model(self):
         self.model=Sequential()
-        self.model.add(InputLayer((5,1)))
+        self.model.add(InputLayer((1,1)))
         self.model.add(LSTM(64))
         self.model.add(Dense(8,"relu"))
         self.model.add(Dense(1,"linear"))
 
     def model_compile(self):
-        self.model.compile(loss=MeanSquaredError(),optimizer=Adam(learning_rate=0.0001),metrics=[RootMeanSquaredError()])
-        self.model.fit(self.df_bmo["Time"],self.df_bmo["Open"],epochs=10)
+        self.model.compile(loss=MeanSquaredError(),optimizer=Adam(learning_rate=0.01),metrics=['accuracy'])
+        self.model.fit(self.df_bmo["Time"],self.df_bmo["Open"],epochs=100)
+
 
     def model_predict(self):
         self.model_predict=self.model.predict(self.df_bmo["Open"])
 
+        print(self.model_predict)
+
+
+    def model_plot(self):
+        fig,axes=plt.subplots(1,2)
+        axes[0].plot(self.df_bmo["Date"],self.df_bmo["Open"])
+        axes[0].plot(self.df_bmo["Date"],self.model_predict)
+        plt.show()
 
 
 neuralnetworkanalysis=NeuralNetowrkAnalysis()
@@ -51,3 +60,4 @@ neuralnetworkanalysis.add_timeline()
 neuralnetworkanalysis.model()
 neuralnetworkanalysis.model_compile()
 neuralnetworkanalysis.model_predict()
+neuralnetworkanalysis.model_plot()
