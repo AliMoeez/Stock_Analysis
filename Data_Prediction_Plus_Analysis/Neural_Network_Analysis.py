@@ -8,6 +8,9 @@ from tensorflow.keras.optimizers import Adam
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+
 
 class NeuralNetowrkAnalysis:
     def __init__(self):
@@ -30,16 +33,39 @@ class NeuralNetowrkAnalysis:
         
         self.df_bmo["Time"]=self.time_list
 
+
+    def data_conslidation(self):
+
+        self.scaler=MinMaxScaler(feature_range=(0,1))
+
+        self.df_bmo[["Time","Open"]]=self.scaler.fit_transform(self.df_bmo[["Time","Open"]])
+
+        self.x_train,self.x_test,self.y_train,self.y_test=train_test_split(
+        
+        self.df_bmo["Time"],
+        self.df_bmo["Open"],
+        test_size=0.45,
+        random_state=42
+        
+        )
+        print(self.x_train)
+        print(self.x_test)
+        print(self.y_train)
+        print(self.y_test)
+
+
     def model(self):
         self.model=Sequential()
         self.model.add(InputLayer((1,1)))
         self.model.add(LSTM(64))
-        self.model.add(Dense(8,"relu"))
+        self.model.add(Dense(32,"relu"))
+        self.model.add(Dense(16,"relu"))
         self.model.add(Dense(1,"linear"))
 
     def model_compile(self):
-        self.model.compile(loss=MeanSquaredError(),optimizer=Adam(learning_rate=0.01),metrics=['accuracy'])
-        self.model.fit(self.df_bmo["Time"],self.df_bmo["Open"],epochs=100)
+        self.model.compile(loss='mse',optimizer=Adam(learning_rate=0.01))
+        self.model.fit(x=self.x_train,y=self.y_train, validation_data=(self.x_test,self.y_test),
+                       epochs=15,shuffle=True,batch_size=5,verbose=1)
 
 
     def model_predict(self):
@@ -57,6 +83,7 @@ class NeuralNetowrkAnalysis:
 
 neuralnetworkanalysis=NeuralNetowrkAnalysis()
 neuralnetworkanalysis.add_timeline()
+neuralnetworkanalysis.data_conslidation()
 neuralnetworkanalysis.model()
 neuralnetworkanalysis.model_compile()
 neuralnetworkanalysis.model_predict()
