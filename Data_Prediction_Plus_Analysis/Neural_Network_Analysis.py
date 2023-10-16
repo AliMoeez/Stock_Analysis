@@ -36,6 +36,8 @@ class NeuralNetowrkAnalysis:
 
     def data_conslidation(self):
 
+        tf.random.set_seed(42)
+
         self.scaler=MinMaxScaler(feature_range=(0,1))
 
         self.df_bmo[["Time","Open"]]=self.scaler.fit_transform(self.df_bmo[["Time","Open"]])
@@ -48,11 +50,6 @@ class NeuralNetowrkAnalysis:
         random_state=42
         
         )
-        print(self.x_train)
-        print(self.x_test)
-        print(self.y_train)
-        print(self.y_test)
-
 
     def model(self):
         self.model=Sequential()
@@ -60,24 +57,39 @@ class NeuralNetowrkAnalysis:
         self.model.add(LSTM(64))
         self.model.add(Dense(32,"relu"))
         self.model.add(Dense(16,"relu"))
+    #    self.model.add(Dense(8,"relu"))
         self.model.add(Dense(1,"linear"))
 
     def model_compile(self):
-        self.model.compile(loss='mse',optimizer=Adam(learning_rate=0.01))
+        self.model.compile(loss='mse',optimizer=Adam(learning_rate=0.001))
         self.model.fit(x=self.x_train,y=self.y_train, validation_data=(self.x_test,self.y_test),
-                       epochs=15,shuffle=True,batch_size=5,verbose=1)
-
-
+                       epochs=25,shuffle=True,batch_size=5,verbose=1)
+        
     def model_predict(self):
+        self.df_bmo[["Time","Open"]]=self.scaler.inverse_transform(self.df_bmo[["Time","Open"]])
+
         self.model_predict=self.model.predict(self.df_bmo["Open"])
 
-        print(self.model_predict)
+        
+        print(self.model_predict.shape)
+        print(self.df_bmo[["Time","Open"]].shape)
+
+        self.model_predict=self.scaler.inverse_transform(self.model_predict)
+        self.x_train=self.scaler.inverse_transform([self.x_train])
+        self.y_train=self.scaler.inverse_transform([self.y_train])
+
+
+        self.model_predict=self.model_predict[::-1]
+
+
 
 
     def model_plot(self):
         fig,axes=plt.subplots(1,2)
-        axes[0].plot(self.df_bmo["Date"],self.df_bmo["Open"])
-        axes[0].plot(self.df_bmo["Date"],self.model_predict)
+        axes[0].plot(self.df_bmo["Time"],self.df_bmo["Open"],label="Original Data")
+        axes[0].plot(self.df_bmo["Time"],self.model_predict,label="Predict Regular")
+    #    axes[0].plot(self.df_bmo["Time"],self.model_predict_1,label="Predict Other")
+        axes[0].legend()
         plt.show()
 
 
