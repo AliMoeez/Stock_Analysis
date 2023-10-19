@@ -4,6 +4,7 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.metrics import RootMeanSquaredError
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Dropout
 
 import pandas as pd
 import numpy as np
@@ -34,53 +35,53 @@ class NeuralNetowrkAnalysis:
         self.df_bmo["Time"]=self.time_list
 
 
+    
     def data_conslidation(self):
 
+        self.bmo_x_train=self.df_bmo["Open"][:-170]
+        self.bmo_x_test=self.df_bmo["Open"][170:]
+
+        self.x_data=[]
+        self.x_1=[]
+
+        self.past_points_refered=10
+
+        for i in range(self.past_points_refered,len(self.bmo_x_train)):
+            self.x_data.append(self.bmo_x_train[i-self.past_points_refered:i])
+            self.x_1.append(self.bmo_x_train[i])
+
+
+        self.x_data=np.array(self.x_data)
+        self.x_1=np.array(self.x_1)
+
+        self.x_data=self.x_data.reshape(self.x_data.shape[0],self.x_data.shape[1],1)
+
         tf.random.set_seed(42)
-
-        self.scaler=MinMaxScaler(feature_range=(0,1))
-
-        self.df_bmo[["Time","Open"]]=self.scaler.fit_transform(self.df_bmo[["Time","Open"]])
-
-        self.x_train,self.x_test,self.y_train,self.y_test=train_test_split(
-        
-        self.df_bmo["Time"],
-        self.df_bmo["Open"],
-        test_size=0.45,
-        random_state=42
-        
-        )
-
+#
     def model(self):
         self.model=Sequential()
-        self.model.add(InputLayer((1,1)))
-        self.model.add(LSTM(64))
-        self.model.add(Dense(32,"relu"))
+        self.model.add(LSTM(units=64, input_shape=(self.x_data.shape[1],1),return_sequences=True))
+        self.model.add(Dropout(0.2))
+        self.model.add(LSTM(units=64))
         self.model.add(Dense(16,"relu"))
-    #    self.model.add(Dense(8,"relu"))
+        self.model.add(Dense(8,"relu"))
+        self.model.add(Dropout(0.2))
+        self.model.add(Dense(4,"relu"))
+        self.model.add(Dense(2,"relu"))
         self.model.add(Dense(1,"linear"))
 
     def model_compile(self):
+        
         self.model.compile(loss='mse',optimizer=Adam(learning_rate=0.001))
-        self.model.fit(x=self.x_train,y=self.y_train, validation_data=(self.x_test,self.y_test),
-                       epochs=25,shuffle=True,batch_size=5,verbose=1)
+        
+        self.model.fit(x=self.x_data,y=self.x_1,
+                       epochs=25,shuffle=True,batch_size=1,verbose=1)
+
         
     def model_predict(self):
-        self.df_bmo[["Time","Open"]]=self.scaler.inverse_transform(self.df_bmo[["Time","Open"]])
-
         self.model_predict=self.model.predict(self.df_bmo["Open"])
 
-        
-        print(self.model_predict.shape)
-        print(self.df_bmo[["Time","Open"]].shape)
-
-        self.model_predict=self.scaler.inverse_transform(self.model_predict)
-        self.x_train=self.scaler.inverse_transform([self.x_train])
-        self.y_train=self.scaler.inverse_transform([self.y_train])
-
-
-        self.model_predict=self.model_predict[::-1]
-
+    
 
 
 
