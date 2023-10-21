@@ -32,14 +32,22 @@ class NeuralNetowrkAnalysis:
             self.x+=1
             self.time_list.append(self.x)
         self.df_bmo["Time"]=self.time_list
+        self.df_naboc["Time"]=self.time_list
+        self.df_td["Time"]=self.time_list
+        self.df_cibc["Time"]=self.time_list
+        self.df_scotia["Time"]=self.time_list
+        self.df_rbc["Time"]=self.time_list
 
-
-    
     def data_conslidation(self):
 
         self.scaler=MinMaxScaler(feature_range=(0,1))
 
         self.df_bmo[["Time","Open"]]=self.scaler.fit_transform(self.df_bmo[["Time","Open"]])
+        self.df_naboc[["Time","Open"]]=self.scaler.fit_transform(self.df_naboc[["Time","Open"]])
+        self.df_td[["Time","Open"]]=self.scaler.fit_transform(self.df_td[["Time","Open"]])
+        self.df_cibc[["Time","Open"]]=self.scaler.fit_transform(self.df_cibc[["Time","Open"]])
+        self.df_scotia[["Time","Open"]]=self.scaler.fit_transform(self.df_scotia[["Time","Open"]])
+        self.df_rbc[["Time","Open"]]=self.scaler.fit_transform(self.df_rbc[["Time","Open"]])
 
         self.bmo_x_train=self.df_bmo["Open"][:-170]
         self.bmo_x_test=self.df_bmo["Open"][170:]
@@ -50,17 +58,20 @@ class NeuralNetowrkAnalysis:
         self.past_points_refered=10
 
         for i in range(self.past_points_refered,len(self.bmo_x_train)):
-            self.x_data.append(self.bmo_x_train[i-self.past_points_refered:i])
-            self.x_1.append(self.bmo_x_train[i])
+                self.x_data.append(self.bmo_x_train[i-self.past_points_refered:i])
+                self.x_1.append(self.bmo_x_train[i])
 
+        print(self.x_data)
 
         self.x_data=np.array(self.x_data)
         self.x_1=np.array(self.x_1)
 
+        print(self.x_data)
+
         self.x_data=self.x_data.reshape(self.x_data.shape[0],self.x_data.shape[1],1)
 
         tf.random.set_seed(42)
-#
+
     def model(self):
         self.model=Sequential()
         self.model.add(LSTM(units=64, input_shape=(self.x_data.shape[1],1),return_sequences=True))
@@ -73,7 +84,7 @@ class NeuralNetowrkAnalysis:
         self.model.compile(loss='mse',optimizer=Adam(learning_rate=0.01))
         
         self.model.fit(x=self.x_data,y=self.x_1,
-                       epochs=50,shuffle=True,batch_size=1,verbose=1)
+                        epochs=50,shuffle=True,batch_size=1,verbose=1)
 
         
     def model_predict(self):
