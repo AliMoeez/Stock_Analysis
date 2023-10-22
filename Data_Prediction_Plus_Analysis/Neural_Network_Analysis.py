@@ -24,6 +24,15 @@ class NeuralNetowrkAnalysis:
         self.df_scotia_div=pd.read_csv(r"Data\Dividends\BNS.TO (1).csv",engine="pyarrow") ; self.df_cibc_div=pd.read_csv(r"Data\Dividends\CIBC.TO (1).csv",engine="pyarrow") 
         self.df_naboc_div=pd.read_csv(r"Data\Dividends\NABOC.TO (1).csv",engine="pyarrow") ; self.df_td_div=pd.read_csv(r"Data\Dividends\TD.TO (1).csv",engine="pyarrow")
 
+        self.bmo_x_data=[] ; self.bmo_x_1=[]
+        self.naboc_x_data=[] ; self.naboc_x_1=[]
+        self.td_x_data=[] ; self.td_x_1=[]
+        self.cibc_x_data=[] ; self.cibc_x_1=[]
+        self.scotia_x_data=[] ; self.scotia_x_1=[]
+        self.rbc_x_data=[] ; self.rbc_x_1=[]
+
+        self.past_points_refered=10
+
     def add_timeline(self):
         
         self.x=0
@@ -49,32 +58,42 @@ class NeuralNetowrkAnalysis:
         self.df_scotia[["Time","Open"]]=self.scaler.fit_transform(self.df_scotia[["Time","Open"]])
         self.df_rbc[["Time","Open"]]=self.scaler.fit_transform(self.df_rbc[["Time","Open"]])
 
-        self.bmo_x_train=self.df_bmo["Open"][:-170]
-        self.bmo_x_test=self.df_bmo["Open"][170:]
+        self.bmo_x_train=self.df_bmo["Open"][:-170] ; self.bmo_x_test=self.df_bmo["Open"][170:]
+        self.naboc_x_train=self.df_naboc["Open"][:-170] ; self.naboc_x_test=self.df_naboc["Open"][170:]
+        self.td_x_train=self.df_td["Open"][:-170] ; self.td_x_test=self.df_td["Open"][170:]
+        self.cibc_x_train=self.df_cibc["Open"][:-170] ; self.cibc_x_test=self.df_cibc["Open"][170:]
+        self.scotia_x_train=self.df_scotia["Open"][:-170] ; self.scotia_x_test=self.df_scotia["Open"][170:]
+        self.rbc_x_train=self.df_rbc["Open"][:-170] ; self.rbc_x_test=self.df_rbc["Open"][170:]
 
-        self.x_data=[]
-        self.x_1=[]
-
-        self.past_points_refered=10
+    def data_into_array(self):
 
         for i in range(self.past_points_refered,len(self.bmo_x_train)):
-                self.x_data.append(self.bmo_x_train[i-self.past_points_refered:i])
-                self.x_1.append(self.bmo_x_train[i])
+            self.bmo_x_data.append(self.bmo_x_train[i-self.past_points_refered:i]) ; self.bmo_x_1.append(self.bmo_x_train[i])
+            self.naboc_x_data.append(self.naboc_x_train[i-self.past_points_refered:i]) ; self.naboc_x_1.append(self.naboc_x_train[i])
+            self.td_x_data.append(self.td_x_train[i-self.past_points_refered:i]) ; self.td_x_1.append(self.td_x_train[i])
+            self.cibc_x_data.append(self.cibc_x_train[i-self.past_points_refered:i]) ; self.cibc_x_1.append(self.cibc_x_train[i])
+            self.scotia_x_data.append(self.scotia_x_train[i-self.past_points_refered:i]) ; self.scotia_x_1.append(self.scotia_x_train[i])
+            self.rbc_x_data.append(self.rbc_x_train[i-self.past_points_refered:i]) ; self.rbc_x_1.append(self.rbc_x_train[i])
+        
+        self.bmo_x_data=np.array(self.bmo_x_data) ; self.bmo_x_1=np.array(self.bmo_x_1)
+        self.rbc_x_data=np.array(self.rbc_x_data) ; self.rbc_x_1=np.array(self.rbc_x_1)
+        self.naboc_x_data=np.array(self.naboc_x_data) ; self.naboc_x_1=np.array(self.naboc_x_1)
+        self.cibc_x_data=np.array(self.cibc_x_data) ; self.cibc_x_1=np.array(self.cibc_x_1)
+        self.scotia_x_data=np.array(self.scotia_x_data) ; self.scotia_x_1=np.array(self.scotia_x_1)
+        self.td_x_data=np.array(self.td_x_data) ; self.td_x_1=np.array(self.td_x_1)
 
-        print(self.x_data)
-
-        self.x_data=np.array(self.x_data)
-        self.x_1=np.array(self.x_1)
-
-        print(self.x_data)
-
-        self.x_data=self.x_data.reshape(self.x_data.shape[0],self.x_data.shape[1],1)
+        self.bmo_x_data=self.bmo_x_data.reshape(self.bmo_x_data.shape[0],self.bmo_x_data.shape[1],1)
+        self.rbc_x_data=self.rbc_x_data.reshape(self.rbc_x_data.shape[0],self.rbc_x_data.shape[1],1)
+        self.naboc_x_data=self.naboc_x_data.reshape(self.naboc_x_data.shape[0],self.naboc_x_data.shape[1],1)
+        self.cibc_x_data=self.cibc_x_data.reshape(self.cibc_x_data.shape[0],self.cibc_x_data.shape[1],1)
+        self.scotia_x_data=self.scotia_x_data.reshape(self.scotia_x_data.shape[0],self.scotia_x_data.shape[1],1)
+        self.td_x_data=self.td_x_data.reshape(self.td_x_data.shape[0],self.td_x_data.shape[1],1)
 
         tf.random.set_seed(42)
 
     def model(self):
         self.model=Sequential()
-        self.model.add(LSTM(units=64, input_shape=(self.x_data.shape[1],1),return_sequences=True))
+        self.model.add(LSTM(units=64, input_shape=(self.bmo_x_data.shape[1],1),return_sequences=True))
         self.model.add(LSTM(units=32))
         self.model.add(Dense(16,"relu"))
         self.model.add(Dense(1,"linear"))
@@ -83,8 +102,8 @@ class NeuralNetowrkAnalysis:
         
         self.model.compile(loss='mse',optimizer=Adam(learning_rate=0.01))
         
-        self.model.fit(x=self.x_data,y=self.x_1,
-                        epochs=50,shuffle=True,batch_size=1,verbose=1)
+        self.model.fit(x=self.bmo_x_data,y=self.bmo_x_1,
+                        epochs=10,shuffle=True,batch_size=1,verbose=1)
 
         
     def model_predict(self):
@@ -115,6 +134,7 @@ class NeuralNetowrkAnalysis:
 neuralnetworkanalysis=NeuralNetowrkAnalysis()
 neuralnetworkanalysis.add_timeline()
 neuralnetworkanalysis.data_conslidation()
+neuralnetworkanalysis.data_into_array()
 neuralnetworkanalysis.model()
 neuralnetworkanalysis.model_compile()
 neuralnetworkanalysis.model_predict()
