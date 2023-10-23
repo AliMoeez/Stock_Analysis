@@ -89,7 +89,7 @@ class NeuralNetowrkAnalysis:
         self.scotia_x_data=self.scotia_x_data.reshape(self.scotia_x_data.shape[0],self.scotia_x_data.shape[1],1)
         self.td_x_data=self.td_x_data.reshape(self.td_x_data.shape[0],self.td_x_data.shape[1],1)
 
-        tf.random.set_seed(42)
+      #  tf.random.set_seed(42)
 
     def model(self):
         self.model=Sequential()
@@ -99,35 +99,80 @@ class NeuralNetowrkAnalysis:
         self.model.add(Dense(1,"linear"))
 
     def model_compile(self):
-        
         self.model.compile(loss='mse',optimizer=Adam(learning_rate=0.01))
         
-        self.model.fit(x=self.bmo_x_data,y=self.bmo_x_1,
-                        epochs=10,shuffle=True,batch_size=1,verbose=1)
+        self.model.fit(x=self.bmo_x_data,y=self.bmo_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.bmo_model_predict=self.model.predict(self.df_bmo["Open"])
+
+        self.model.fit(x=self.rbc_x_data,y=self.rbc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.rbc_model_predict=self.model.predict(self.df_rbc["Open"])
+
+        self.model.fit(x=self.naboc_x_data,y=self.naboc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.naboc_model_predict=self.model.predict(self.df_naboc["Open"])
+
+        self.model.fit(x=self.cibc_x_data,y=self.cibc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.cibc_model_predict=self.model.predict(self.df_cibc["Open"])
+
+        self.model.fit(x=self.scotia_x_data,y=self.td_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.td_model_predict=self.model.predict(self.df_td["Open"])
+
+        self.model.fit(x=self.scotia_x_data,y=self.scotia_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.scotia_model_predict=self.model.predict(self.df_scotia["Open"])
 
         
     def model_predict(self):
-        self.model_predict=self.model.predict(self.df_bmo["Open"])
+        self.bmo_model_predict=pd.DataFrame(data={"Time":self.df_bmo["Time"], "Output":self.bmo_model_predict.flatten()})
+        self.rbc_model_predict=pd.DataFrame(data={"Time":self.df_rbc["Time"],"Output":self.rbc_model_predict.flatten()})
 
-   
-        self.model_predict=pd.DataFrame(
-            data={
-                "Time":self.df_bmo["Time"],
-                "Output":self.model_predict.flatten()
-
-            }
-        )
+        self.naboc_model_predict=pd.DataFrame(data={"Time":self.df_naboc["Time"],"Output":self.naboc_model_predict.flatten()})
+        self.cibc_model_predict=pd.DataFrame(data={"Time":self.df_cibc["Time"],"Output":self.cibc_model_predict.flatten()})
+        self.td_model_predict=pd.DataFrame(data={"Time":self.df_td["Time"],"Output":self.td_model_predict.flatten()})
+        self.scotia_model_predict=pd.DataFrame(data={"Time":self.df_scotia["Time"],"Output":self.scotia_model_predict.flatten()})
 
     def model_plot(self):
-        fig,axes=plt.subplots(1,2)
+        fig,axes=plt.subplots(2,3)
         self.df_bmo[["Time","Open"]]=self.scaler.inverse_transform(self.df_bmo[["Time","Open"]])
-        self.model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.model_predict[["Time","Output"]])
+        self.df_rbc[["Time","Open"]]=self.scaler.inverse_transform(self.df_rbc[["Time","Open"]])
+        self.df_scotia[["Time","Open"]]=self.scaler.inverse_transform(self.df_scotia[["Time","Open"]])
+        self.df_cibc[["Time","Open"]]=self.scaler.inverse_transform(self.df_cibc[["Time","Open"]])
+        self.df_td[["Time","Open"]]=self.scaler.inverse_transform(self.df_td[["Time","Open"]])
+        self.df_naboc[["Time","Open"]]=self.scaler.inverse_transform(self.df_naboc[["Time","Open"]])
+
+        self.bmo_model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.bmo_model_predict[["Time","Output"]])
+        self.rbc_model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.rbc_model_predict[["Time","Output"]])
+        self.scotia_model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.scotia_model_predict[["Time","Output"]])
+        self.cibc_model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.cibc_model_predict[["Time","Output"]])
+        self.naboc_model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.naboc_model_predict[["Time","Output"]])
+        self.td_model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.td_model_predict[["Time","Output"]])
 
 
-        axes[0].plot(self.df_bmo["Time"],self.df_bmo["Open"],label="Original Data")
-        axes[0].plot(self.df_bmo["Time"],self.model_predict["Output"],label="Predict Regular")
-    #    axes[0].plot(self.df_bmo["Time"],self.model_predict_1,label="Predict Other")
-        axes[0].legend()
+
+        axes[0,0].plot(self.df_bmo["Time"],self.df_bmo["Open"],label="Original BMO Data")
+        axes[0,0].plot(self.df_bmo["Time"],self.bmo_model_predict["Output"],label="Predict BMO")
+        
+        axes[0,1].plot(self.df_rbc["Time"],self.df_rbc["Open"],label="Original RBC Data")
+        axes[0,1].plot(self.df_rbc["Time"],self.rbc_model_predict["Output"],label="Predict RBC")
+
+        axes[0,2].plot(self.df_scotia["Time"],self.df_scotia["Open"],label="Original Scotia Data")
+        axes[0,2].plot(self.df_scotia["Time"],self.scotia_model_predict["Output"],label="Predict Scotia")
+
+        axes[1,0].plot(self.df_cibc["Time"],self.df_cibc["Open"],label="Original CIBC Data")
+        axes[1,0].plot(self.df_cibc["Time"],self.cibc_model_predict["Output"],label="Predict CIBC")
+
+        axes[1,1].plot(self.df_naboc["Time"],self.df_naboc["Open"],label="Original National Bank Data")
+        axes[1,1].plot(self.df_naboc["Time"],self.naboc_model_predict["Output"],label="Predict National Bank")
+
+        axes[1,2].plot(self.df_td["Time"],self.df_td["Open"],label="Original TD Data")
+        axes[1,2].plot(self.df_td["Time"],self.td_model_predict["Output"],label="Predict TD")
+
+        
+        axes[0,0].legend()
+        axes[0,1].legend()
+        axes[0,2].legend()
+        axes[1,0].legend()
+        axes[1,1].legend()
+        axes[1,2].legend()
+        
         plt.show()
 
 
