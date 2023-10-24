@@ -101,22 +101,22 @@ class NeuralNetowrkAnalysis:
     def model_compile(self):
         self.model.compile(loss='mse',optimizer=Adam(learning_rate=0.01))
         
-        self.model.fit(x=self.bmo_x_data,y=self.bmo_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.model.fit(x=self.bmo_x_data,y=self.bmo_x_1,epochs=1,shuffle=True,batch_size=1,verbose=2)
         self.bmo_model_predict=self.model.predict(self.df_bmo["Open"])
 
-        self.model.fit(x=self.rbc_x_data,y=self.rbc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.model.fit(x=self.rbc_x_data,y=self.rbc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=2)
         self.rbc_model_predict=self.model.predict(self.df_rbc["Open"])
 
-        self.model.fit(x=self.naboc_x_data,y=self.naboc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.model.fit(x=self.naboc_x_data,y=self.naboc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=2)
         self.naboc_model_predict=self.model.predict(self.df_naboc["Open"])
 
-        self.model.fit(x=self.cibc_x_data,y=self.cibc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.model.fit(x=self.cibc_x_data,y=self.cibc_x_1,epochs=1,shuffle=True,batch_size=1,verbose=2)
         self.cibc_model_predict=self.model.predict(self.df_cibc["Open"])
 
-        self.model.fit(x=self.scotia_x_data,y=self.td_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.model.fit(x=self.scotia_x_data,y=self.td_x_1,epochs=1,shuffle=True,batch_size=1,verbose=2)
         self.td_model_predict=self.model.predict(self.df_td["Open"])
 
-        self.model.fit(x=self.scotia_x_data,y=self.scotia_x_1,epochs=1,shuffle=True,batch_size=1,verbose=1)
+        self.model.fit(x=self.scotia_x_data,y=self.scotia_x_1,epochs=1,shuffle=True,batch_size=1,verbose=2)
         self.scotia_model_predict=self.model.predict(self.df_scotia["Open"])
 
         
@@ -145,9 +145,7 @@ class NeuralNetowrkAnalysis:
         self.naboc_model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.naboc_model_predict[["Time","Output"]])
         self.td_model_predict[["Time","Output"]]=self.scaler.inverse_transform(self.td_model_predict[["Time","Output"]])
 
-
-
-        axes[0,0].plot(self.df_bmo["Time"],self.df_bmo["Open"],label="Original BMO Data")
+        """axes[0,0].plot(self.df_bmo["Time"],self.df_bmo["Open"],label="Original BMO Data")
         axes[0,0].plot(self.df_bmo["Time"],self.bmo_model_predict["Output"],label="Predict BMO")
         
         axes[0,1].plot(self.df_rbc["Time"],self.df_rbc["Open"],label="Original RBC Data")
@@ -164,7 +162,6 @@ class NeuralNetowrkAnalysis:
 
         axes[1,2].plot(self.df_td["Time"],self.df_td["Open"],label="Original TD Data")
         axes[1,2].plot(self.df_td["Time"],self.td_model_predict["Output"],label="Predict TD")
-
         
         axes[0,0].legend()
         axes[0,1].legend()
@@ -173,7 +170,41 @@ class NeuralNetowrkAnalysis:
         axes[1,1].legend()
         axes[1,2].legend()
         
-        plt.show()
+        plt.show()"""
+
+    def model_df(self):
+
+        self.df_model=pd.DataFrame(
+            data={
+                "Time": self.df_bmo["Time"],
+                "BMO": self.df_bmo["Open"],
+                "Scotiabank": self.df_scotia["Open"],
+                "National Bank of Canada": self.df_naboc["Open"],
+                "RBC": self.df_rbc["Open"],
+                "TD": self.df_td["Open"],
+                "CIBC": self.df_cibc["Open"]
+            }
+        )
+
+        return self.df_model
+
+    def model_df_prediction(self):
+        
+        self.df_model_prediction=pd.DataFrame(
+            data={
+                "Time":self.bmo_model_predict["Time"],
+                "BMO":  self.bmo_model_predict["Output"],
+                "Scotiabank": self.scotia_model_predict["Output"],
+                "National Bank of Canada": self.naboc_model_predict["Output"],
+                "RBC": self.rbc_model_predict["Output"],
+                "TD": self.td_model_predict["Output"],
+                "CIBC": self.cibc_model_predict["Output"]
+            }
+        )
+
+        return self.df_model_prediction
+
+
 
 
 neuralnetworkanalysis=NeuralNetowrkAnalysis()
@@ -184,3 +215,5 @@ neuralnetworkanalysis.model()
 neuralnetworkanalysis.model_compile()
 neuralnetworkanalysis.model_predict()
 neuralnetworkanalysis.model_plot()
+neuralnetworkanalysis.model_df()
+neuralnetworkanalysis.model_df_prediction()
