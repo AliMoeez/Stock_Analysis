@@ -89,7 +89,7 @@ class NeuralNetowrkAnalysis:
         self.scotia_x_data=self.scotia_x_data.reshape(self.scotia_x_data.shape[0],self.scotia_x_data.shape[1],1)
         self.td_x_data=self.td_x_data.reshape(self.td_x_data.shape[0],self.td_x_data.shape[1],1)
 
-      #  tf.random.set_seed(42)
+        tf.random.set_seed(42)
 
     def model(self):
         self.model=Sequential()
@@ -209,11 +209,11 @@ class NeuralNetowrkAnalysis:
 
 neuralnetworkanalysis=NeuralNetowrkAnalysis()
 neuralnetworkanalysis.add_timeline()
-neuralnetworkanalysis.data_conslidation()
-neuralnetworkanalysis.data_into_array()
-neuralnetworkanalysis.model()
-neuralnetworkanalysis.model_compile()
-neuralnetworkanalysis.model_predict()
-neuralnetworkanalysis.model_plot()
+#neuralnetworkanalysis.data_conslidation()
+#neuralnetworkanalysis.data_into_array()
+#neuralnetworkanalysis.model()
+#neuralnetworkanalysis.model_compile()
+#neuralnetworkanalysis.model_predict()
+#neuralnetworkanalysis.model_plot()
 neuralnetworkanalysis.model_df()
-neuralnetworkanalysis.model_df_prediction()
+#neuralnetworkanalysis.model_df_prediction()
