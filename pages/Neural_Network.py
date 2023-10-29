@@ -38,7 +38,7 @@ layout=html.Div([
 
 def show_neural_network(ticker):
     figure=make_subplots(rows=1,cols=1)
-    figure.update_layout(plot_bgcolor="#484848",paper_bgcolor="#484848",font_color="#FFFFFF")
+    figure.update_layout(plot_bgcolor="#000000",paper_bgcolor="#000000",font_color="#FFFFFF")
     figure.append_trace(go.Scatter(x=neural_network_model_df["Time"],y=neural_network_model_df[ticker],mode="lines",name="Data"),row=1,col=1)
     figure.append_trace(go.Scatter(x=neural_netowrk_model_df_prediction["Time"],y=neural_netowrk_model_df_prediction[ticker],mode="lines",name="Prediction"),row=1,col=1)
     return figure

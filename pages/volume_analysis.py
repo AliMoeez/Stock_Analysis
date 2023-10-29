@@ -32,8 +32,8 @@ layout=html.Div([
 def volumne_graph(ticker):
     if ticker!="Total":
         figure=px.line(change_daily,x="Date",y=ticker)
-        figure.update_layout(plot_bgcolor='#484848',paper_bgcolor='#484848',font_color="#FFFFFF")
+        figure.update_layout(plot_bgcolor='#000000',paper_bgcolor='#000000',font_color="#FFFFFF")
     else:
         figure=px.line(change_daily,x="Date",y=change_daily.columns)
-        figure.update_layout(plot_bgcolor='#484848',paper_bgcolor='#484848',font_color="#FFFFFF")
+        figure.update_layout(plot_bgcolor='#000000',paper_bgcolor='#000000',font_color="#FFFFFF")
     return figure

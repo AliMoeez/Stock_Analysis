@@ -32,7 +32,7 @@ layout=html.Div([
 
 def display_time_series(ticker):
     figure=make_subplots(rows=1,cols=1)
-    figure.update_layout(plot_bgcolor='#484848',paper_bgcolor='#484848',font_color="#FFFFFF")
+    figure.update_layout(plot_bgcolor='#000000',paper_bgcolor='#000000',font_color="#FFFFFF")
     figure.append_trace(go.Scatter(x=all_arima["Date"],y=all_arima[ticker],mode="lines",name="Data",),row=1,col=1)
     figure.append_trace(go.Scatter(x=all_arima_forecast["Date"],y=all_arima_forecast[ticker],mode="lines",name="Forecast"),row=1,col=1)
 
@@ -42,7 +42,7 @@ def display_time_series(ticker):
     
     figure.append_trace(go.Scatter(x=arima_ci_lower["Date"],y=arima_ci_lower[ticker],mode="lines",
                                 name="Forecast CI",marker=dict(color="grey"),
-                                line=dict(width=1),fillcolor='rgba(10,10,10,0.3)',fill='tonexty'),row=1,col=1)
+                                line=dict(width=1),fillcolor='rgba(51,51,52,0.3)',fill='tonexty'),row=1,col=1)
 
     return figure
 

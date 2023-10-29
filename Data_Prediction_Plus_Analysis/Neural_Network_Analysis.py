@@ -49,16 +49,19 @@ class NeuralNetworkAnalysis:
 
     def data_conslidation(self):
 
-        self.scaler=MinMaxScaler(feature_range=(0,1))
+        self.scaler_1=MinMaxScaler((0,1))
+        self.scaler_2=MinMaxScaler((0,1))
+        self.scaler_3=MinMaxScaler((0,1))
+        self.scaler_4=MinMaxScaler((0,1))
+        self.scaler_5=MinMaxScaler((0,1))
+        self.scaler_6=MinMaxScaler((0,1))
 
-        self.df_bmo["Open"]=self.scaler.fit_transform(self.df_bmo[["Open"]])
-        self.df_naboc["Open"]=self.scaler.fit_transform(self.df_naboc[["Open"]])
-        self.df_td["Open"]=self.scaler.fit_transform(self.df_td[["Open"]])
-        self.df_cibc["Open"]=self.scaler.fit_transform(self.df_cibc[["Open"]])
-        self.df_scotia["Open"]=self.scaler.fit_transform(self.df_scotia[["Open"]])
-        self.df_rbc["Open"]=self.scaler.fit_transform(self.df_rbc[["Open"]])
-
-
+        self.df_bmo["Open"]=self.scaler_1.fit_transform(self.df_bmo[["Open"]])
+        self.df_naboc["Open"]=self.scaler_2.fit_transform(self.df_naboc[["Open"]])
+        self.df_td["Open"]=self.scaler_3.fit_transform(self.df_td[["Open"]])
+        self.df_cibc["Open"]=self.scaler_4.fit_transform(self.df_cibc[["Open"]])
+        self.df_scotia["Open"]=self.scaler_5.fit_transform(self.df_scotia[["Open"]])
+        self.df_rbc["Open"]=self.scaler_6.fit_transform(self.df_rbc[["Open"]])
 
         self.bmo_x_train=self.df_bmo["Open"][:-170] ; self.bmo_x_test=self.df_bmo["Open"][170:]
         self.naboc_x_train=self.df_naboc["Open"][:-170] ; self.naboc_x_test=self.df_naboc["Open"][170:]
@@ -120,8 +123,7 @@ class NeuralNetworkAnalysis:
 
         self.model.fit(x=self.scotia_x_data,y=self.scotia_x_1,epochs=1,shuffle=True,batch_size=1,verbose=2)
         self.scotia_model_predict=self.model.predict(self.df_scotia["Open"])
-
-        
+     
     def model_predict(self):
         self.bmo_model_predict=pd.DataFrame(data={"Time":self.df_bmo["Time"], "Output":self.bmo_model_predict.flatten()})
         self.rbc_model_predict=pd.DataFrame(data={"Time":self.df_rbc["Time"],"Output":self.rbc_model_predict.flatten()})
@@ -133,37 +135,37 @@ class NeuralNetworkAnalysis:
 
     def model_plot(self):
         fig,axes=plt.subplots(2,3)
-        self.df_bmo["Open"]=self.scaler.inverse_transform(self.df_bmo[["Open"]])
-        self.df_rbc["Open"]=self.scaler.inverse_transform(self.df_rbc[["Open"]])
-        self.df_scotia["Open"]=self.scaler.inverse_transform(self.df_scotia[["Open"]])
-        self.df_cibc["Open"]=self.scaler.inverse_transform(self.df_cibc[["Open"]])
-        self.df_td["Open"]=self.scaler.inverse_transform(self.df_td[["Open"]])
-        self.df_naboc["Open"]=self.scaler.inverse_transform(self.df_naboc[["Open"]])
+        self.df_bmo["Open"]=self.scaler_1.inverse_transform(self.df_bmo[["Open"]])
+        self.df_rbc["Open"]=self.scaler_6.inverse_transform(self.df_rbc[["Open"]])
+        self.df_scotia["Open"]=self.scaler_5.inverse_transform(self.df_scotia[["Open"]])
+        self.df_cibc["Open"]=self.scaler_4.inverse_transform(self.df_cibc[["Open"]])
+        self.df_td["Open"]=self.scaler_3.inverse_transform(self.df_td[["Open"]])
+        self.df_naboc["Open"]=self.scaler_2.inverse_transform(self.df_naboc[["Open"]])
 
-        self.bmo_model_predict["Output"]=self.scaler.inverse_transform(self.bmo_model_predict[["Output"]])
-        self.rbc_model_predict["Output"]=self.scaler.inverse_transform(self.rbc_model_predict[["Output"]])
-        self.scotia_model_predict["Output"]=self.scaler.inverse_transform(self.scotia_model_predict[["Output"]])
-        self.cibc_model_predict["Output"]=self.scaler.inverse_transform(self.cibc_model_predict[["Output"]])
-        self.naboc_model_predict["Output"]=self.scaler.inverse_transform(self.naboc_model_predict[["Output"]])
-        self.td_model_predict["Output"]=self.scaler.inverse_transform(self.td_model_predict[["Output"]])
+        self.bmo_model_predict["Output"]=self.scaler_1.inverse_transform(self.bmo_model_predict[["Output"]])
+        self.rbc_model_predict["Output"]=self.scaler_6.inverse_transform(self.rbc_model_predict[["Output"]])
+        self.scotia_model_predict["Output"]=self.scaler_5.inverse_transform(self.scotia_model_predict[["Output"]])
+        self.cibc_model_predict["Output"]=self.scaler_4.inverse_transform(self.cibc_model_predict[["Output"]])
+        self.naboc_model_predict["Output"]=self.scaler_2.inverse_transform(self.naboc_model_predict[["Output"]])
+        self.td_model_predict["Output"]=self.scaler_3.inverse_transform(self.td_model_predict[["Output"]])
 
-        axes[0,0].plot(self.df_bmo["Time"],self.df_bmo["Open"],label="Original BMO Data")
-        axes[0,0].plot(self.df_bmo["Time"],self.bmo_model_predict["Output"],label="Predict BMO")
+        """axes[0,0].plot(self.df_bmo["Date"],self.df_bmo["Open"],label="Original BMO Data")
+        axes[0,0].plot(self.df_bmo["Date"],self.bmo_model_predict["Output"],label="Predict BMO")
         
-        axes[0,1].plot(self.df_rbc["Time"],self.df_rbc["Open"],label="Original RBC Data")
-        axes[0,1].plot(self.df_rbc["Time"],self.rbc_model_predict["Output"],label="Predict RBC")
+        axes[0,1].plot(self.df_rbc["Date"],self.df_rbc["Open"],label="Original RBC Data")
+        axes[0,1].plot(self.df_rbc["Date"],self.rbc_model_predict["Output"],label="Predict RBC")
 
-        axes[0,2].plot(self.df_scotia["Time"],self.df_scotia["Open"],label="Original Scotia Data")
-        axes[0,2].plot(self.df_scotia["Time"],self.scotia_model_predict["Output"],label="Predict Scotia")
+        axes[0,2].plot(self.df_scotia["Date"],self.df_scotia["Open"],label="Original Scotia Data")
+        axes[0,2].plot(self.df_scotia["Date"],self.scotia_model_predict["Output"],label="Predict Scotia")
 
-        axes[1,0].plot(self.df_cibc["Time"],self.df_cibc["Open"],label="Original CIBC Data")
-        axes[1,0].plot(self.df_cibc["Time"],self.cibc_model_predict["Output"],label="Predict CIBC")
+        axes[1,0].plot(self.df_cibc["Date"],self.df_cibc["Open"],label="Original CIBC Data")
+        axes[1,0].plot(self.df_cibc["Date"],self.cibc_model_predict["Output"],label="Predict CIBC")
 
-        axes[1,1].plot(self.df_naboc["Time"],self.df_naboc["Open"],label="Original National Bank Data")
-        axes[1,1].plot(self.df_naboc["Time"],self.naboc_model_predict["Output"],label="Predict National Bank")
+        axes[1,1].plot(self.df_naboc["Date"],self.df_naboc["Open"],label="Original National Bank Data")
+        axes[1,1].plot(self.df_naboc["Date"],self.naboc_model_predict["Output"],label="Predict National Bank")
 
-        axes[1,2].plot(self.df_td["Time"],self.df_td["Open"],label="Original TD Data")
-        axes[1,2].plot(self.df_td["Time"],self.td_model_predict["Output"],label="Predict TD")
+        axes[1,2].plot(self.df_td["Date"],self.df_td["Open"],label="Original TD Data")
+        axes[1,2].plot(self.df_td["Date"],self.td_model_predict["Output"],label="Predict TD")
         
         axes[0,0].legend()
         axes[0,1].legend()
@@ -172,7 +174,7 @@ class NeuralNetworkAnalysis:
         axes[1,1].legend()
         axes[1,2].legend()
     
-        plt.show()
+        plt.show()"""
 
     def model_df(self):
 
