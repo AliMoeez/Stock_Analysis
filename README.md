@@ -3,16 +3,26 @@
 Code will use various statistical packages and dash to analyze a dataset of stocks in the financial sector from the TSX.
 Visualizations will also be done in Matplotlib, but dash will be used to create a dashboard of the results obtained.
 
-This project will display
-    
-    --When the stock prices on a daily basis (on average) are the highest & lowest
-    
-    --The best time of year to invest in the financial sector (when stock prices are lowest and are expected to go up)
-    
-    --Predictions for various companies on their stock price using SARIMA models and Neural Network Models 
-    
-    --Which companies had the biggest and smallest change in their stock price in the last year (Sep 2022 - Sep 2023)
-    
-    --Ranking Firms based on their forward & trailing P/E Ratio
+This project displays the following:
+
+Daily Returns
+
+
+
+
+Neural Netowrks
+
+
+
+
+ARIMA Models
+
+
+
+
+Volume Analysis
+
+
+
 
 Data from: https://ca.finance.yahoo.com/
