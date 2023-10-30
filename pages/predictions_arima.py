@@ -32,7 +32,7 @@ layout=html.Div([
 
 def display_time_series(ticker):
     figure=make_subplots(rows=1,cols=1)
-    figure.update_layout(plot_bgcolor='#000000',paper_bgcolor='#000000',font_color="#FFFFFF")
+    figure.update_layout(plot_bgcolor='#FFFFFF',paper_bgcolor='#FFFFFF',font_color="#000000")
     figure.append_trace(go.Scatter(x=all_arima["Date"],y=all_arima[ticker],mode="lines",name="Data",),row=1,col=1)
     figure.append_trace(go.Scatter(x=all_arima_forecast["Date"],y=all_arima_forecast[ticker],mode="lines",name="Forecast"),row=1,col=1)
 

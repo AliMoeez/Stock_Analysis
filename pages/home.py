@@ -11,7 +11,7 @@ layout=html.Div([
 
     html.H2(children="Thank you for using my DashBoard!",style={"textAlign":"center"}),
 
-    html.H2(children="This dashboard has plots for Predictions (ARIMA) and analysis of daily returns and volume change!",style={"textAlign":"center"}),
+    html.H2(children="This dashboard has plots for Predictions (ARIMA) and analysis of daily returns,volume change, and Neural Networks!",style={"textAlign":"center"}),
 
 
 ])

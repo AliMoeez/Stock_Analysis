@@ -16,7 +16,7 @@ app.layout=html.Div([
     html.Div([
     html.Div(
         dcc.Link(f"{page['name']}",href=page["relative_path"]),
-    style={"width":"15%","display":"inline-block"}) for page in dash.page_registry.values()
+    style={"width":"20%","display":"inline-block"}) for page in dash.page_registry.values()
 
     ]),
     dash.page_container

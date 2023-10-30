@@ -35,8 +35,8 @@ def show_daily_stock_return(ticker):
     df_daily_stock_return=all_daily_returns
     if ticker!="Total":
         figure=px.line(df_daily_stock_return,x="Date",y=ticker)
-        figure.update_layout(plot_bgcolor='#000000',paper_bgcolor='#000000',font_color="#FFFFFF")
+        figure.update_layout(plot_bgcolor='#FFFFFF',paper_bgcolor='#FFFFFF',font_color="#000000")
     else:
         figure=px.line(df_daily_stock_return,x="Date",y=df_daily_stock_return.columns,labels={"value":"All Companies"})
-        figure.update_layout(plot_bgcolor='#000000',paper_bgcolor='#000000',font_color="#FFFFFF")
+        figure.update_layout(plot_bgcolor='#FFFFFF',paper_bgcolor='#FFFFFF',font_color="#000000")
     return figure

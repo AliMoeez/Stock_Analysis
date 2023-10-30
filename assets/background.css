@@ -1,23 +1,23 @@
 body {
-    background-color: black
+    background-color: white
 }
 
 h1 {
     color: #AC3E31;
     font-size : 45px;
-    font-family: 'Open Sans'
+    font-family: 'roboto'
 
 }
 
 h2 {
     color: #AC3E31;
     font-size: 30px;
-    font-family:  'Open Sans'
+    font-family:  'roboto'
 }
 
 a{font-size:25px}
 
-a{font-family: 'Open Sans'}
+a{font-family: 'roboto'}
 
 a:link{
     color:#AC3E31
@@ -42,15 +42,15 @@ a:active{
 }
 
 .Select-control{
-    background-color:black !important;
-    color: #FFFFFF;
+    background-color:white !important;
+    color: #AC3E31;
 }
 
 .Select-menu-outer {
-    background-color:#484848;
-    color: #FFFFFF;
+    background-color:white;
+    color: #AC3E31;
 }
 
 .Select-value-label{
-    color: #FFFFFF !important;
+    color:#AC3E31 !important;
 }
